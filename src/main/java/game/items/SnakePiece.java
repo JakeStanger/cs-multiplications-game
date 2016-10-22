@@ -84,7 +84,7 @@ public class SnakePiece extends GameItem
 		this.move();
 	}
 	
-	public int getID()
+	int getID()
 	{
 		return ID;
 	}
