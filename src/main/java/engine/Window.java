@@ -126,6 +126,8 @@ public class Window
 		
 		if(this.opts.showTriangles) glPolygonMode(GL_FRONT_AND_BACK, GL_LINE); //Wireframe rendering
 		
+		glfwSetInputMode(this.getWindowHandle(), GLFW_CURSOR, GLFW_CURSOR_DISABLED);
+		
 	}
 	
 	public void setClearColour(float r, float g, float b, float a)

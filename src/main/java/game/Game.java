@@ -136,11 +136,8 @@ public class Game implements IGameLogic
 	public void update(float interval, MouseInput mouseInput)
 	{
 		//Update camera based on mouse
-		if (mouseInput.isRightButtonPressed())
-		{
-			Vector2f rotVec = mouseInput.getDisplVec();
-			this.camera.moveRotation(rotVec.x * Game.MOUSE_SENSITIVITY, rotVec.y * Game.MOUSE_SENSITIVITY, 0);
-		}
+		Vector2f rotVec = mouseInput.getDisplVec();
+		this.camera.moveRotation(rotVec.x * Game.MOUSE_SENSITIVITY, rotVec.y * Game.MOUSE_SENSITIVITY, 0);
 		
 		//Update camera position
 		this.camera.movePosition(this.cameraDelta.x * CAMERA_POS_STEP, this.cameraDelta.y * CAMERA_POS_STEP, this.cameraDelta.z * CAMERA_POS_STEP);
