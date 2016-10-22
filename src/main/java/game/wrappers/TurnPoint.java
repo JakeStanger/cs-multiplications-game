@@ -20,7 +20,7 @@ public class TurnPoint
 	public TurnPoint(Direction direction, Vector3f position)
 	{
 		this.direction = direction;
-		this.position = position;
+		this.position = new Vector3f(position);
 		
 		this.tailsVisited = new ArrayList<>();
 	}
@@ -45,7 +45,7 @@ public class TurnPoint
 		this.position = position;
 	}
 	
-	public void addTailToVisitedList(int tailID)
+	public void addPieceToVisitedList(int tailID)
 	{
 		this.tailsVisited.add(tailID);
 	}

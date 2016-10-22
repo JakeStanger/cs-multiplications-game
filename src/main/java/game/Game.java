@@ -86,7 +86,7 @@ public class Game implements IGameLogic
 		
 		for(int i = 0; i < MAX_SNAKE_LENGTH; i++)
 		{
-			SnakeTail tail = new SnakeTail(i);
+			SnakeTail tail = new SnakeTail(i+1);
 			tail.setPosition(0, 0, (-3+(i+1)* GRID_SIZE));
 			
 			if(i-1 < DEFAULT_SNAKE_TAIL_LENGTH)

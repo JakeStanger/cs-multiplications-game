@@ -63,16 +63,15 @@ public class Food extends GameItem
 	{
 		final float delta = 0.0005f;
 		
-		float step = (float) (Math.asin(this.getPosition().y - this.startPos.y)*BOB_STEP);
+		double step = (float) (Math.asin(this.getPosition().y - this.startPos.y)*BOB_STEP);
 		if(step < delta) step = delta;
-		
 		
 		if(this.bobDir == Direction.DOWN) step = -step;
 		
 		this.getPosition().y += step;
 		
-		if(this.getPosition().y - this.startPos.y > BOB_HEIGHT) this.bobDir = Direction.UP;
-		else if(this.startPos.y - this.getPosition().y > BOB_HEIGHT) this.bobDir = Direction.DOWN;
+		if(this.getPosition().y - this.startPos.y > BOB_HEIGHT) this.bobDir = Direction.DOWN;
+		else if(this.startPos.y - this.getPosition().y > BOB_HEIGHT) this.bobDir = Direction.UP;
 	}
 	
 	public void randomlyPlaceOnMap()

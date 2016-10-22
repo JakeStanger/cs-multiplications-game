@@ -1,32 +1,21 @@
 package game.items;
 
-import engine.Utils;
 import engine.graph.Material;
 import engine.graph.Mesh;
 import engine.graph.Texture;
-import engine.items.GameItem;
 import engine.loaders.obj.OBJLoader;
 import game.Game;
-import game.enums.Direction;
-import game.wrappers.TurnPoint;
-
-import java.util.List;
 
 import static game.Game.SNAKE_TAIL_SCALE;
 import static game.items.SnakeHead.REFLECTANCE;
-import static game.items.SnakeHead.SNAKE_STEP;
 
 /**
  * @author Jake stanger
  * A tail piece of the snake, which follows the head.
  */
-public class SnakeTail extends GameItem
+public class SnakeTail extends SnakePiece
 {
 	private static final float ANIM_MULTIPLIER = 0.05f;
-	
-	private int tailID;
-	
-	private Direction direction;
 	
 	private boolean visible;
 	
@@ -37,9 +26,9 @@ public class SnakeTail extends GameItem
 	 */
 	private boolean popIn;
 	
-	public SnakeTail(int tailID) throws Exception
+	public SnakeTail(int ID) throws Exception
 	{
-		this.tailID = tailID;
+		this.ID = ID;
 		
 		Mesh mesh = OBJLoader.loadMesh("/models/cube.obj");
 		
@@ -48,67 +37,14 @@ public class SnakeTail extends GameItem
 		
 		this.setMesh(mesh);
 		
-		this.direction = Game.snakeHead.getCurrentDirection();
+		this.direction = Game.snakeHead.getDirection();
 	}
 	
+	@Override
 	public void update()
 	{
-		this.move();
+		super.update();
 		if(this.popIn) this.popIn();
-	}
-	
-	public void move()
-	{
-		TurnPoint turnPoint = this.getFirstUnvisitedTurnPoint();
-		if(turnPoint != null)
-		{
-			this.step(direction);
-			if (Utils.areVectorsEqual(this.getPosition(), turnPoint.getPosition())) turnPoint.addTailToVisitedList(this.tailID);
-		}
-		else if(Game.snakeHead.getCurrentDirection() != null) step(Game.snakeHead.getCurrentDirection());
-	}
-	
-	private void step(Direction direction)
-	{
-		switch (direction)
-		{
-			case FORWARDS:
-				this.getPosition().z -= SNAKE_STEP;
-				break;
-			case BACKWARDS:
-				this.getPosition().z += SNAKE_STEP;
-				break;
-			case LEFT:
-				this.getPosition().x -= SNAKE_STEP;
-				break;
-			case RIGHT:
-				this.getPosition().x += SNAKE_STEP;
-				break;
-			case UP:
-				this.getPosition().y += SNAKE_STEP;
-				break;
-			case DOWN:
-				this.getPosition().y -= SNAKE_STEP;
-				break;
-		}
-	}
-	
-	private TurnPoint getFirstUnvisitedTurnPoint()
-	{
-		List<TurnPoint> turnPoints = Game.snakeHead.getTurnPoints();
-		for(int i = 0; i < turnPoints.size(); i++)
-		{
-			TurnPoint turnPoint = turnPoints.get(i);
-			
-			List<Integer> tailsVisited = turnPoint.getTailsVisited();
-			if(!(tailsVisited.contains(this.tailID)))
-			{
-				if(i-1 >= 0) this.direction = turnPoints.get(i-1).getDirection();
-				return turnPoint;
-			}
-		}
-		
-		return null;
 	}
 	
 	private void popIn()
@@ -124,7 +60,7 @@ public class SnakeTail extends GameItem
 		}
 	}
 	
-	public boolean isVisible()
+	boolean isVisible()
 	{
 		return visible;
 	}
@@ -134,14 +70,9 @@ public class SnakeTail extends GameItem
 		this.visible = visible;
 	}
 	
-	public void setPopIn(boolean shouldPopIn)
+	void setPopIn(boolean shouldPopIn)
 	{
 		this.popIn = shouldPopIn;
-	}
-	
-	public int getTailID()
-	{
-		return tailID;
 	}
 }
 
