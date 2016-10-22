@@ -6,9 +6,11 @@ import engine.graph.Mesh;
 import engine.graph.Texture;
 import engine.items.GameItem;
 import engine.loaders.obj.OBJLoader;
-import game.Game;
 import game.enums.Direction;
 import org.joml.Vector3f;
+
+import static game.Game.GRID_SIZE;
+import static game.Game.MAP_SIZE;
 
 /**
  * @author Jake stanger
@@ -76,9 +78,9 @@ public class Food extends GameItem
 	
 	public void randomlyPlaceOnMap()
 	{
-		int x = Utils.getRandomIntBetween(0, Game.MAP_SIZE);
-		int y = Utils.getRandomIntBetween(0, Game.MAP_SIZE);
-		int z = Utils.getRandomIntBetween(0, Game.MAP_SIZE);
+		float x = Utils.getRandomFloatBetween(0, MAP_SIZE, GRID_SIZE);
+		float y = Utils.getRandomFloatBetween(0, MAP_SIZE, GRID_SIZE);
+		float z = Utils.getRandomFloatBetween(0, MAP_SIZE, GRID_SIZE);
 		
 		this.setPosition(x, y, z);
 		this.startPos = new Vector3f(x, y, z);

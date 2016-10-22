@@ -209,7 +209,21 @@ public class Utils
 	 */
 	public static int getRandomIntBetween(int min, int max)
 	{
+		return (int) getRandomFloatBetween(min, max, 1);
+	}
+	
+	/**
+	 * Gets a random float which is a multiple of mult between min and max (inclusive).
+	 * While it returns a float, the initial pseudo-random number is still an integer.
+	 * @param min The minimum value
+	 * @param max The maximum value
+	 * @param mult The multiple specifier
+	 * @return A random float between the minimum and maximum value (inclusive)
+	 * which is a multiple of mult.
+	 */
+	public static float getRandomFloatBetween(int min, int max, float mult)
+	{
 		Random random = new Random();
-		return random.nextInt(max - min + 1) - min;
+		return (Math.round(random.nextInt(max - min + 1) - min)/mult)*mult;
 	}
 }
