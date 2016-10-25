@@ -1,5 +1,7 @@
 package game.enums;
 
+import org.joml.Vector3f;
+
 /**
  * @author Jake stanger
  * A direction in the world.
@@ -27,6 +29,28 @@ public enum Direction
 			default:
 				return FORWARDS;
 		}
+	}
+	
+	public static Direction getRotatedDirection(Direction currentDirection, Direction directionToRotateIn)
+	{
+		switch(currentDirection)
+		{
+			case LEFT:
+				
+		}
+		return null;
+	}
+	
+	public static Vector3f getRotationVector(Direction direction)
+	{
+		switch(direction)
+		{
+			case FORWARDS:
+				return new Vector3f(0, 0, 0);
+			//TODO Finish writing method
+		}
+		
+		return null;
 	}
 }
 

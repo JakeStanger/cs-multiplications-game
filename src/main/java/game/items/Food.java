@@ -52,6 +52,8 @@ public class Food extends GameItem
 	{
 		this.roll();
 		this.bob();
+		
+		this.randomlyPlaceOnMap();
 	}
 	
 	private void roll()
@@ -78,11 +80,15 @@ public class Food extends GameItem
 	
 	public void randomlyPlaceOnMap()
 	{
-		float x = Utils.getRandomFloatBetween(0, MAP_SIZE, GRID_SIZE);
-		float y = Utils.getRandomFloatBetween(0, MAP_SIZE, GRID_SIZE);
-		float z = Utils.getRandomFloatBetween(0, MAP_SIZE, GRID_SIZE);
+		float x = Utils.getRandomFloatBetween(GRID_SIZE, MAP_SIZE-GRID_SIZE, GRID_SIZE);
+		float y = Utils.getRandomFloatBetween(GRID_SIZE, MAP_SIZE-GRID_SIZE, GRID_SIZE);
+		float z = -Utils.getRandomFloatBetween(GRID_SIZE, MAP_SIZE-GRID_SIZE, GRID_SIZE);
 		
-		this.setPosition(x, y, z);
+		if(x > MAP_SIZE) x = MAP_SIZE - GRID_SIZE*2;
+		if(y > MAP_SIZE) y = MAP_SIZE - GRID_SIZE*2;
+		if(z > MAP_SIZE) z = MAP_SIZE - GRID_SIZE*2;
+		
+		this.setPosition(MAP_SIZE-GRID_SIZE, MAP_SIZE-GRID_SIZE, -(MAP_SIZE-GRID_SIZE));
 		this.startPos = new Vector3f(x, y, z);
 	}
 }

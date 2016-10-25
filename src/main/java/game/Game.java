@@ -4,12 +4,15 @@ import engine.*;
 import engine.graph.Camera;
 import engine.graph.Renderer;
 import engine.graph.lights.DirectionalLight;
+import engine.graph.lights.PointLight;
+import engine.graph.lights.SpotLight;
 import engine.items.GameItem;
 import engine.sound.SoundManager;
 import engine.testGame.Hud;
 import game.items.Food;
 import game.items.SnakeHead;
 import game.items.SnakeTail;
+import game.items.Wall;
 import org.joml.Vector2f;
 import org.joml.Vector3f;
 
@@ -34,7 +37,7 @@ public class Game implements IGameLogic
 	/**
 	 * The number of units the map stretches in each direction
 	 */
-	public static final int MAP_SIZE = 10;
+	public static final int MAP_SIZE = 30;
 	
 	private final Renderer renderer;
 	private final SoundManager soundManager;
@@ -53,6 +56,9 @@ public class Game implements IGameLogic
 	private static int score;
 	private static boolean running;
 	
+	
+	float timer = 10;
+	
 	public Game()
 	{
 		this.renderer = new Renderer();
@@ -69,13 +75,10 @@ public class Game implements IGameLogic
 		this.soundManager.init();
 		
 		this.scene = new Scene();
-		this.scene.setSceneLight(new SceneLight());
-		this.scene.getSceneLight().setAmbientLight(new Vector3f(0.3f, 0.3f, 0.3f));
-		this.scene.getSceneLight().setDirectionalLight(new DirectionalLight(new Vector3f(0.9f, 0.2f, 0.8f), new Vector3f(0, 1, 1), 1f));
 		
 		this.gameItems = new ArrayList<>();
 		
-		snakeHead = new SnakeHead(new Vector3f(0, 0, -3));
+		snakeHead = new SnakeHead(new Vector3f(MAP_SIZE/2, MAP_SIZE/2, -MAP_SIZE/2));
 		snakeHead.setScale(SNAKE_HEAD_SCALE);
 		
 		food = new Food();
@@ -84,10 +87,11 @@ public class Game implements IGameLogic
 		this.gameItems.add(snakeHead);
 		this.gameItems.add(food);
 		
+		//Add snake tails
 		for(int i = 0; i < MAX_SNAKE_LENGTH; i++)
 		{
 			SnakeTail tail = new SnakeTail(i+1);
-			tail.setPosition(0, 0, (-3+(i+1)* GRID_SIZE));
+			tail.setPosition(MAP_SIZE/2, MAP_SIZE/2, ((-MAP_SIZE/2)+(i+1)* GRID_SIZE));
 			
 			if(i-1 < DEFAULT_SNAKE_TAIL_LENGTH)
 			{
@@ -103,11 +107,50 @@ public class Game implements IGameLogic
 			this.gameItems.add(tail);
 			snakeHead.addTailToList(tail);
 		}
+		//Add walls
+		Wall wall = new Wall();
+		this.gameItems.add(wall);
+		
+		/*SkyBox skyBox = new SkyBox("/models/skybox.obj", "/textures/grassblock.png");
+		skyBox.setScale(MAP_SIZE*1.5f);
+		this.scene.setSkyBox(skyBox);*/
+		
+		//Lighting
+		this.setupLighting();
 		
 		this.scene.setGameItems(this.gameItems);
 		this.hud = new Hud("Test");
 		
 		running = true;
+	}
+	
+	private void setupLighting()
+	{
+		final Vector3f ambientIntensity = new Vector3f(0.4f, 0.4f, 0.4f);
+		
+		final Vector3f directionalColour = new Vector3f(0.9f, 0.2f, 0.8f);
+		final Vector3f directionalDirection = new Vector3f(0, 1, 1);
+		final float directionalIntensity = 1f;
+		
+		this.scene.setSceneLight(new SceneLight());
+		this.scene.getSceneLight().setAmbientLight(ambientIntensity);
+		this.scene.getSceneLight().setSkyBoxLight(ambientIntensity);
+		this.scene.getSceneLight().setDirectionalLight(new DirectionalLight(directionalColour, directionalDirection, directionalIntensity));
+		
+		final Vector3f foodLightColour = new Vector3f(0.7f, 0.7f, 0.3f);
+		final float foodLightIntensity = 2f;
+		PointLight foodLight = new PointLight(foodLightColour, food.getPosition(), foodLightIntensity);
+		
+		final Vector3f headLightColour = new Vector3f(0.7f, 0.7f, 0.7f);
+		final float headLightIntensity = 1f;
+		final float headLightAngle = 70;
+		
+		PointLight headLightPoint = new PointLight(headLightColour, snakeHead.getPosition(), headLightIntensity);
+		Vector3f rotation = new Vector3f(snakeHead.getRotation().x, snakeHead.getRotation().y, snakeHead.getRotation().z);
+		SpotLight headLight = new SpotLight(headLightPoint, rotation, headLightAngle);
+		
+		this.scene.getSceneLight().setPointLights(new PointLight[]{foodLight});
+		this.scene.getSceneLight().setSpotLights(new SpotLight[]{headLight});
 	}
 	
 	@Override
@@ -136,18 +179,29 @@ public class Game implements IGameLogic
 	public void update(float interval, MouseInput mouseInput)
 	{
 		//Update camera based on mouse
-		Vector2f rotVec = mouseInput.getDisplVec();
-		this.camera.moveRotation(rotVec.x * Game.MOUSE_SENSITIVITY, rotVec.y * Game.MOUSE_SENSITIVITY, 0);
+		if(mouseInput.isRightButtonPressed())
+		{
+			Vector2f rotVec = mouseInput.getDisplVec();
+			this.camera.moveRotation(rotVec.x * Game.MOUSE_SENSITIVITY, rotVec.y * Game.MOUSE_SENSITIVITY, 0);
+		}
 		
 		//Update camera position
 		this.camera.movePosition(this.cameraDelta.x * CAMERA_POS_STEP, this.cameraDelta.y * CAMERA_POS_STEP, this.cameraDelta.z * CAMERA_POS_STEP);
+		//this.camera.setPosition(snakeHead.getPosition().x, snakeHead.getPosition().y, snakeHead.getPosition().z);
 		
 		if (isRunning())
 		{
 			snakeHead.update();
 			snakeHead.getTailList().forEach(SnakeTail::update);
 			
+			//food.update();
+		}
+		
+		this.timer--;
+		if(this.timer < 0)
+		{
 			food.update();
+			this.timer = 20;
 		}
 	}
 	

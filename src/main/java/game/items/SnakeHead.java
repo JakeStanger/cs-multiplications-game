@@ -118,7 +118,9 @@ public class SnakeHead extends SnakePiece
 	
 	private void collisionCheckWall()
 	{
-		//TODO Write method
+		if(this.getPosition().x <= 0 || this.getPosition().y <= 0 || this.getPosition().z >= 0 ||
+				this.getPosition().x >= MAP_SIZE || this.getPosition().y >= MAP_SIZE || this.getPosition().z <= -MAP_SIZE)
+			Game.setRunning(false); //^^z-axis is inverted^^
 	}
 	
 	public void addTailToList(SnakeTail tail)
