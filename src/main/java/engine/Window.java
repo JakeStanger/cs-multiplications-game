@@ -22,9 +22,7 @@ public class Window
 	private long windowHandle;
 	
 	private GLFWErrorCallback errorCallback;
-	
 	private GLFWKeyCallback keyCallback;
-	
 	private GLFWWindowSizeCallback windowSizeCallback;
 	
 	private boolean resized;
@@ -92,10 +90,10 @@ public class Window
 		});
 		
 		//Get primary monitor resolution
-		GLFWVidMode vidmode = glfwGetVideoMode(glfwGetPrimaryMonitor());
+		GLFWVidMode vidMode = glfwGetVideoMode(glfwGetPrimaryMonitor());
 		
 		//Centre window
-		glfwSetWindowPos(windowHandle, (vidmode.width() - width) / 2, (vidmode.height() - height) / 2
+		glfwSetWindowPos(windowHandle, (vidMode.width() - width) / 2, (vidMode.height() - height) / 2
 		);
 		
 		// Make the OpenGL context current

@@ -231,7 +231,7 @@ public class Utils
 	 * @return A random integer which is a multiple of <i>mult</i>
 	 * between the minimum and maximum value (inclusive).
 	 */
-	public static int getRandomMultipleBetween(int min, int max, float mult) //TODO Fix method
+	public static int getRandomMultipleBetween(int min, int max, float mult)
 	{
 		float rand = getRandomIntBetween(min, max);
 		return (int)(Math.round(rand/mult)*mult);

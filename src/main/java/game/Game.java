@@ -55,9 +55,6 @@ public class Game implements IGameLogic
 	private static int score;
 	private static boolean running;
 	
-	
-	float timer = 10;
-	
 	public Game()
 	{
 		this.renderer = new Renderer();
@@ -195,13 +192,6 @@ public class Game implements IGameLogic
 			
 			food.update();
 		}
-		
-		/*this.timer--;
-		if(this.timer < 0)
-		{
-			food.update();
-			this.timer = 20;
-		}*/
 	}
 	
 	/**
@@ -210,14 +200,7 @@ public class Game implements IGameLogic
 	public static void incrementScore()
 	{
 		score++;
-		try
-		{
-			hud.getScoreLabel().setText("Score: " + score);
-		}
-		catch (Exception e)
-		{
-			e.printStackTrace();
-		}
+		hud.getScoreLabel().setText("Score: " + score);
 	}
 	
 	public static boolean isRunning()

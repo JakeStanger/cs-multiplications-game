@@ -35,8 +35,8 @@ public class TextItem extends GameItem
 		List<Float> positions = new ArrayList<>();
 		List<Float> textCoords = new ArrayList<>();
 		
-		float[] normals   = new float[0];
-		List<Integer> indices   = new ArrayList<>();
+		float[] normals = new float[0];
+		List<Integer> indices = new ArrayList<>();
 		
 		char[] characters = text.toCharArray();
 		int numChars = characters.length;
@@ -92,7 +92,6 @@ public class TextItem extends GameItem
 		
 		Mesh mesh = new Mesh(posArr, textCoordsArr, normals, indicesArr);
 		mesh.setMaterial(new Material(fontTexture.getTexture()));
-		
 		return mesh;
 	}
 	
@@ -104,7 +103,7 @@ public class TextItem extends GameItem
 	public void setText(String text)
 	{
 		this.text = text;
-		//this.getMesh().deleteBuffers();
+		this.getMesh().deleteBuffers();
 		this.setMesh(buildMesh());
 	}
 	

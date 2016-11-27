@@ -21,7 +21,7 @@ public class Main
 			engine.Window.WindowOptions opts = new engine.Window.WindowOptions();
 			
 			opts.cullFace = true;
-			opts.showFps = true;
+			opts.showFps = false;
 			opts.compatibleProfile = false;
 			
 			IGameLogic gameLogic = new Game(); //Create game

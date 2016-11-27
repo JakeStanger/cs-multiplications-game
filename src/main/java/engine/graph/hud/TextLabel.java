@@ -36,9 +36,9 @@ public class TextLabel
 		this.textItem.setPosition(x, y, 0);
 	}
 	
-	public void setText(String text) throws Exception
+	public void setText(String text)
 	{
-		this.textItem.setText(text); //TODO Fix text rendering black
+		this.textItem.setText(text);
 	}
 	
 	public String getText()
