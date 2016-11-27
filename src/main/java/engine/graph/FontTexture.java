@@ -100,7 +100,7 @@ public class FontTexture
 		graphics2D.dispose();
 		
 		//Debug output
-		//ImageIO.write(img, IMAGE_FORMAT, new java.io.File("Temp.png"));
+		//ImageIO.write(img, IMAGE_FORMAT, new java.io.File("FontOutput-" + UUID.randomUUID() + ".png"));
 		
 		//Dump image to byte buffer
 		InputStream stream;

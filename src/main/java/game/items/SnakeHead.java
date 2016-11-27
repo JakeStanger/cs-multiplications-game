@@ -112,7 +112,7 @@ public class SnakeHead extends SnakePiece
 		for(SnakeTail tail : this.tailList)
 			if (Utils.areVectorsInRange(this.getPosition(), tail.getPosition(),
 					GRID_SIZE * SNAKE_TAIL_SCALE))
-				//We can assume we never crash into the first tail piece
+				//We can safely assume we never crash into the head first tail piece
 				if (tail.getID() > 1 && tail.isVisible()) Game.setRunning(false);
 	}
 	

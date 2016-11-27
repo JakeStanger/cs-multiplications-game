@@ -164,12 +164,12 @@ public class MD5Loader
 			}
 		}
 		
-		float[] positionsArr = Utils.listToArray(positions);
-		float[] textCoordsArr = Utils.listToArray(textCoords);
-		float[] normalsArr = Utils.listToArray(normals);
+		float[] positionsArr = Utils.floatListToArray(positions);
+		float[] textCoordsArr = Utils.floatListToArray(textCoords);
+		float[] normalsArr = Utils.floatListToArray(normals);
 		int[] indicesArr = Utils.intListToArray(indices);
 		int[] jointIndicesArr = Utils.intListToArray(jointIndices);
-		float[] weightsArr = Utils.listToArray(weights);
+		float[] weightsArr = Utils.floatListToArray(weights);
 		
 		Mesh result = new Mesh(positionsArr, textCoordsArr, normalsArr, indicesArr, jointIndicesArr, weightsArr);
 		

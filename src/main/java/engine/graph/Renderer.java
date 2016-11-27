@@ -356,14 +356,14 @@ public class Renderer
 		for (GameItem gameItem : hud.getGameItems())
 		{
 			Mesh mesh = gameItem.getMesh();
-			// Set orthographic and model matrix for this HUD item
+			// Set orthographic and model matrix for this hud item
 			Matrix4f projModelMatrix = transformation.buildOrthoProjectionModelMatrix(gameItem, ortho);
 			
 			hudShaderProgram.setUniform("projModelMatrix", projModelMatrix);
 			hudShaderProgram.setUniform("colour", gameItem.getMesh().getMaterial().getColour());
 			hudShaderProgram.setUniform("hasTexture", gameItem.getMesh().getMaterial().isTextured() ? 1 : 0);
 			
-			//Render the mesh for this HUD item
+			//Render the mesh for this hud item
 			mesh.render();
 		}
 		

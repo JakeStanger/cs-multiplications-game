@@ -4,13 +4,14 @@ import engine.Utils;
 import engine.graph.FontTexture;
 import engine.graph.Material;
 import engine.graph.Mesh;
+import org.joml.Vector3f;
 
 import java.util.ArrayList;
 import java.util.List;
 
 /**
  * @author Jake stanger
- * A string to be drawn onto the HUD
+ * A string to be drawn onto the hud
  */
 public class TextItem extends GameItem
 {
@@ -18,6 +19,7 @@ public class TextItem extends GameItem
 	public static final int VERTICES_PER_QUAD = 4;
 	
 	private String text;
+	
 	private FontTexture fontTexture;
 	
 	public TextItem(String text, FontTexture fontTexture) throws Exception
@@ -77,18 +79,20 @@ public class TextItem extends GameItem
 			textCoords.add(0.0f);
 			indices.add(i*VERTICES_PER_QUAD + 3);
 			
-			// Add indices por left top and bottom right vertices
+			//Add indices por left top and bottom right vertices
 			indices.add(i*VERTICES_PER_QUAD);
 			indices.add(i*VERTICES_PER_QUAD + 2);
 			
 			startX += charInfo.getWidth();
 		}
 		
-		float[] posArr = Utils.listToArray(positions);
-		float[] textCoordsArr = Utils.listToArray(textCoords);
+		float[] posArr = Utils.floatListToArray(positions);
+		float[] textCoordsArr = Utils.floatListToArray(textCoords);
 		int[] indicesArr = indices.stream().mapToInt(i->i).toArray();
+		
 		Mesh mesh = new Mesh(posArr, textCoordsArr, normals, indicesArr);
 		mesh.setMaterial(new Material(fontTexture.getTexture()));
+		
 		return mesh;
 	}
 	
@@ -100,7 +104,17 @@ public class TextItem extends GameItem
 	public void setText(String text)
 	{
 		this.text = text;
-		this.getMesh().deleteBuffers();
+		//this.getMesh().deleteBuffers();
 		this.setMesh(buildMesh());
+	}
+	
+	public void setColour(Vector3f colour)
+	{
+		this.getMesh().getMaterial().setColour(colour);
+	}
+	
+	public FontTexture getFontTexture()
+	{
+		return fontTexture;
 	}
 }

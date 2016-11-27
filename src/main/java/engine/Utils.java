@@ -1,5 +1,6 @@
 package engine;
 
+import engine.items.GameItem;
 import game.enums.Direction;
 import org.joml.Vector3f;
 import org.lwjgl.BufferUtils;
@@ -64,7 +65,7 @@ public class Utils
 		return list.stream().mapToInt((Integer v) -> v).toArray();
 	}
 	
-	public static float[] listToArray(List<Float> list)
+	public static float[] floatListToArray(List<Float> list)
 	{
 		int size = list != null ? list.size() : 0;
 		float[] floatArr = new float[size];
@@ -72,6 +73,16 @@ public class Utils
 		for(int i = 0; i < size; i++) floatArr[i] = list.get(i);
 		
 		return floatArr;
+	}
+	
+	public static GameItem[] gameItemListToArray(List<GameItem> list)
+	{
+		int size = list != null ? list.size() : 0;
+		GameItem[] arr = new GameItem[size];
+		
+		for(int i = 0; i < size; i++) arr[i] = list.get(i);
+		
+		return arr;
 	}
 	
 	public static boolean resourceFileExists(String fileName)
@@ -221,7 +232,7 @@ public class Utils
 	 * @return A random float between the minimum and maximum value (inclusive)
 	 * which is a multiple of mult.
 	 */
-	public static float getRandomFloatBetween(int min, int max, float mult)
+	public static float getRandomFloatBetween(int min, int max, float mult) //TODO Fix method
 	{
 		Random random = new Random();
 		return (Math.round(random.nextInt(max - min + 1) - min)/mult)*mult;

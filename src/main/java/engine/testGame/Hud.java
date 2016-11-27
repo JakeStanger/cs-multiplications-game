@@ -14,7 +14,7 @@ import java.awt.*;
 
 /**
  * @author Jake stanger
- * Game HUD implementation
+ * Game hud implementation
  */
 public class Hud implements IHud
 {

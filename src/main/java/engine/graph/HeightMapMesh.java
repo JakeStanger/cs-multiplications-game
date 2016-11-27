@@ -79,9 +79,9 @@ public class HeightMapMesh
 		}
 		
 		//Create mesh and associated material
-		float[] posArr = Utils.listToArray(positions);
+		float[] posArr = Utils.floatListToArray(positions);
 		int[] indicesArr = indices.stream().mapToInt(i -> i).toArray();
-		float[] textCoordsArr = Utils.listToArray(textCoords);
+		float[] textCoordsArr = Utils.floatListToArray(textCoords);
 		float[] normalsArr = calcNormals(posArr, width, height);
 		
 		this.mesh = new Mesh(posArr, textCoordsArr, normalsArr, indicesArr);
@@ -190,7 +190,7 @@ public class HeightMapMesh
 				normals.add(normal.z);
 			}
 		}
-		return Utils.listToArray(normals);
+		return Utils.floatListToArray(normals);
 	}
 	
 	public static float getXLength()

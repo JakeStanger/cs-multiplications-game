@@ -8,7 +8,6 @@ import engine.graph.lights.PointLight;
 import engine.graph.lights.SpotLight;
 import engine.items.GameItem;
 import engine.sound.SoundManager;
-import engine.testGame.Hud;
 import game.items.Food;
 import game.items.SnakeHead;
 import game.items.SnakeTail;
@@ -44,7 +43,7 @@ public class Game implements IGameLogic
 	private final Camera camera;
 	
 	private Scene scene;
-	private Hud hud;
+	private static Hud hud;
 	
 	private Vector3f cameraDelta;
 	
@@ -119,18 +118,18 @@ public class Game implements IGameLogic
 		this.setupLighting();
 		
 		this.scene.setGameItems(this.gameItems);
-		this.hud = new Hud("Test");
+		hud = new Hud();
 		
 		running = true;
 	}
 	
 	private void setupLighting()
 	{
-		final Vector3f ambientIntensity = new Vector3f(0.4f, 0.4f, 0.4f);
+		final Vector3f ambientIntensity = new Vector3f(0.1f, 0.1f, 0.1f);
 		
 		final Vector3f directionalColour = new Vector3f(0.9f, 0.2f, 0.8f);
 		final Vector3f directionalDirection = new Vector3f(0, 1, 1);
-		final float directionalIntensity = 1f;
+		final float directionalIntensity = 0.3f;
 		
 		this.scene.setSceneLight(new SceneLight());
 		this.scene.getSceneLight().setAmbientLight(ambientIntensity);
@@ -194,15 +193,15 @@ public class Game implements IGameLogic
 			snakeHead.update();
 			snakeHead.getTailList().forEach(SnakeTail::update);
 			
-			//food.update();
+			food.update();
 		}
 		
-		this.timer--;
+		/*this.timer--;
 		if(this.timer < 0)
 		{
 			food.update();
 			this.timer = 20;
-		}
+		}*/
 	}
 	
 	/**
@@ -211,6 +210,14 @@ public class Game implements IGameLogic
 	public static void incrementScore()
 	{
 		score++;
+		try
+		{
+			hud.getScoreLabel().setText("Score: " + score);
+		}
+		catch (Exception e)
+		{
+			e.printStackTrace();
+		}
 	}
 	
 	public static boolean isRunning()
@@ -226,6 +233,7 @@ public class Game implements IGameLogic
 	@Override
 	public void render(Window window)
 	{
+		if (hud != null) hud.updateSize(window);
 		this.renderer.render(window, camera, scene, hud);
 	}
 	
@@ -234,5 +242,7 @@ public class Game implements IGameLogic
 	{
 		this.renderer.cleanup();
 		this.soundManager.cleanup();
+		
+		if (hud != null) hud.cleanup();
 	}
 }
