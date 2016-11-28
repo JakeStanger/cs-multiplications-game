@@ -86,10 +86,10 @@ public class Particle extends GameItem
 		if(this.currentAnimTimeMillis >= this.updateTextureMillis && this.animFrames > 0)
 		{
 			this.currentAnimTimeMillis = 0;
-			int pos = this.getTextPos() + 1;
+			int pos = this.getTexturePos() + 1;
 			
-			if(pos < this.animFrames) this.setTextPos(pos);
-			else this.setTextPos(0);
+			if(pos < this.animFrames) this.setTexturePos(pos);
+			else this.setTexturePos(0);
 		}
 		
 		return this.timeToLive;

@@ -24,7 +24,12 @@ public class Hud implements IHud
 		this.hudItems = new ArrayList<>();
 		
 		this.scoreLabel = new TextLabel(10, 10, "Score: 0");
+		
+		//Button button = new Button(0, 100, 200, "Play Game", new Font("Helvetica", Font.PLAIN, 30), new Vector3f(1, 1, 1), new Vector3f(1, 0, 0));
+		
 		this.hudItems.add(scoreLabel.getTextItem());
+		//this.hudItems.add(button.getTextItem());
+		//this.hudItems.add(button.getBackground());
 	}
 	
 	@Override

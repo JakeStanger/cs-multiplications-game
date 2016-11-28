@@ -14,7 +14,7 @@ public class GameItem
 	private final Vector3f position;
 	private final Quaternionf rotation;
 	private float scale;
-	private int textPos;
+	private int texturePos;
 	
 	private boolean selected;
 	
@@ -23,7 +23,7 @@ public class GameItem
 		position = new Vector3f(0, 0, 0);
 		rotation = new Quaternionf();
 		scale = 1;
-		textPos = 0;
+		texturePos = 0;
 	}
 	
 	public GameItem(Mesh mesh)
@@ -98,14 +98,14 @@ public class GameItem
 		this.meshes = new Mesh[]{mesh};
 	}
 	
-	public int getTextPos()
+	public int getTexturePos()
 	{
-		return textPos;
+		return texturePos;
 	}
 	
-	public void setTextPos(int textPos)
+	public void setTexturePos(int texturePos)
 	{
-		this.textPos = textPos;
+		this.texturePos = texturePos;
 	}
 	
 	public boolean isSelected()

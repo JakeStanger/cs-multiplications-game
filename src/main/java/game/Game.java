@@ -8,10 +8,7 @@ import engine.graph.lights.PointLight;
 import engine.graph.lights.SpotLight;
 import engine.items.GameItem;
 import engine.sound.SoundManager;
-import game.items.Food;
-import game.items.SnakeHead;
-import game.items.SnakeTail;
-import game.items.Wall;
+import game.items.*;
 import org.joml.Vector2f;
 import org.joml.Vector3f;
 
@@ -82,6 +79,7 @@ public class Game implements IGameLogic
 		
 		this.gameItems.add(snakeHead);
 		this.gameItems.add(food);
+		this.gameItems.add(new MenuButton("play.obj"));
 		
 		//Add snake tails
 		for(int i = 0; i < MAX_SNAKE_LENGTH; i++)
@@ -122,11 +120,11 @@ public class Game implements IGameLogic
 	
 	private void setupLighting()
 	{
-		final Vector3f ambientIntensity = new Vector3f(0.1f, 0.1f, 0.1f);
+		final Vector3f ambientIntensity = new Vector3f(0.3f, 0.3f, 0.3f);
 		
-		final Vector3f directionalColour = new Vector3f(0.9f, 0.2f, 0.8f);
+		final Vector3f directionalColour = new Vector3f(1, 1, 1);
 		final Vector3f directionalDirection = new Vector3f(0, 1, 1);
-		final float directionalIntensity = 0.3f;
+		final float directionalIntensity = 0.4f;
 		
 		this.scene.setSceneLight(new SceneLight());
 		this.scene.getSceneLight().setAmbientLight(ambientIntensity);

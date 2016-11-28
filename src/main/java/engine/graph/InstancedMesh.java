@@ -148,8 +148,8 @@ public class InstancedMesh extends Mesh
 			
 			if(texture != null)
 			{
-				int col = gameItem.getTextPos() % texture.getNumCols();
-				int row = gameItem.getTextPos() / texture.getNumCols();
+				int col = gameItem.getTexturePos() % texture.getNumCols();
+				int row = gameItem.getTexturePos() / texture.getNumCols();
 				
 				float textXOffset = (float) col / texture.getNumCols();
 				float textYOffset = (float) row / texture.getNumRows();

@@ -111,7 +111,7 @@ public class DummyGame implements IGameLogic
 				incy = rgb / (10 * 255 * 255);
 				gameItem.setPosition(posx, starty + incy, posz);
 				int textPos = Math.random() > 0.5f ? 0 : 1;
-				gameItem.setTextPos(textPos);
+				gameItem.setTexturePos(textPos);
 				gameItems[i * width + j] = gameItem;
 				
 				posx += inc;
