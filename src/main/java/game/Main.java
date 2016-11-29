@@ -2,7 +2,7 @@ package game;
 
 import engine.GameEngine;
 import engine.IGameLogic;
-import game.scenes.Game;
+import game.scenes.Menu;
 
 /**
  * @author Jake stanger
@@ -12,6 +12,8 @@ public class Main
 {
 	private static final int WINDOW_WIDTH = 1280, WINDOW_HEIGHT = 720;
 	private static final String WINDOW_TITLE = "CS Multiplication Game";
+	
+	private static IGameLogic gameLogic;
 	
 	public static void main(String[] args)
 	{
@@ -25,7 +27,7 @@ public class Main
 			opts.showFps = false;
 			opts.compatibleProfile = false;
 			
-			IGameLogic gameLogic = new Game(); //Create game
+			Main.gameLogic = new GameLogic(new Menu()); //Create game
 			GameEngine gameEngine = new GameEngine(WINDOW_TITLE, WINDOW_WIDTH, WINDOW_HEIGHT, vSync, opts, gameLogic);
 			gameEngine.start();
 		}
@@ -34,5 +36,10 @@ public class Main
 			e.printStackTrace();
 			System.exit(-1);
 		}
+	}
+	
+	public static IGameLogic getGameLogic()
+	{
+		return gameLogic;
 	}
 }

@@ -19,9 +19,15 @@ public class MenuButton extends GameItem
 	
 	public MenuButton(String meshName) throws Exception
 	{
-		Mesh mesh = OBJLoader.loadMesh("/models/menu/" + meshName);
+		Mesh mesh = OBJLoader.loadMesh("/models/menu/" + meshName + ".obj");
 		mesh.setMaterial(MAT_DESELECTED);
 		this.setMesh(mesh);
-		this.setScale(0.5f);
+	}
+	
+	@Override
+	public void setSelected(boolean selected)
+	{
+		if(selected) this.getMesh().setMaterial(MAT_SELECTED);
+		else this.getMesh().setMaterial(MAT_DESELECTED);
 	}
 }

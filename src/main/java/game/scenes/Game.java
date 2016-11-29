@@ -22,7 +22,7 @@ import static org.lwjgl.glfw.GLFW.*;
  * @author Jake stanger
  * Main game class for 3D snake.
  */
-public class Game implements IGameLogic, IScene //TODO integrate into GameLoop
+public class Game implements IScene
 {
 	private static final float MOUSE_SENSITIVITY = 0.2f, CAMERA_POS_STEP = 0.1f;
 	
@@ -44,8 +44,6 @@ public class Game implements IGameLogic, IScene //TODO integrate into GameLoop
 	private static Hud hud;
 	
 	private Vector3f cameraDelta;
-	
-	private List<GameItem> gameItems;
 	
 	public static SnakeHead snakeHead;
 	public static Food food;
@@ -70,7 +68,7 @@ public class Game implements IGameLogic, IScene //TODO integrate into GameLoop
 		
 		this.scene = new Scene();
 		
-		this.gameItems = new ArrayList<>();
+		List<GameItem> gameItems = new ArrayList<>();
 		
 		snakeHead = new SnakeHead(new Vector3f(MAP_SIZE/2, MAP_SIZE/2, -MAP_SIZE/2));
 		snakeHead.setScale(SNAKE_HEAD_SCALE);
@@ -78,9 +76,9 @@ public class Game implements IGameLogic, IScene //TODO integrate into GameLoop
 		food = new Food();
 		food.setScale(FOOD_SCALE);
 		
-		this.gameItems.add(snakeHead);
-		this.gameItems.add(food);
-		this.gameItems.add(new MenuButton("play.obj"));
+		gameItems.add(snakeHead);
+		gameItems.add(food);
+		//gameItems.add(new MenuButton("play.obj"));
 		
 		//Add snake tails
 		for(int i = 0; i < MAX_SNAKE_LENGTH; i++)
@@ -99,21 +97,17 @@ public class Game implements IGameLogic, IScene //TODO integrate into GameLoop
 				tail.setScale(0); //Invisible effect
 			}
 			
-			this.gameItems.add(tail);
+			gameItems.add(tail);
 			snakeHead.addTailToList(tail);
 		}
 		//Add walls
 		Wall wall = new Wall();
-		this.gameItems.add(wall);
-		
-		/*SkyBox skyBox = new SkyBox("/models/skybox.obj", "/textures/grassblock.png");
-		skyBox.setScale(MAP_SIZE*1.5f);
-		this.scene.setSkyBox(skyBox);*/
+		gameItems.add(wall);
 		
 		//Lighting
 		this.setupLighting();
 		
-		this.scene.setGameItems(this.gameItems);
+		this.scene.setGameItems(gameItems);
 		hud = new Hud();
 		
 		running = true;
@@ -182,7 +176,6 @@ public class Game implements IGameLogic, IScene //TODO integrate into GameLoop
 		
 		//Update camera position
 		this.camera.movePosition(this.cameraDelta.x * CAMERA_POS_STEP, this.cameraDelta.y * CAMERA_POS_STEP, this.cameraDelta.z * CAMERA_POS_STEP);
-		//this.camera.setPosition(snakeHead.getPosition().x, snakeHead.getPosition().y, snakeHead.getPosition().z);
 		
 		if (isRunning())
 		{
