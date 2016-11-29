@@ -4,9 +4,9 @@ import engine.graph.Material;
 import engine.graph.Mesh;
 import engine.graph.Texture;
 import engine.loaders.obj.OBJLoader;
-import game.Game;
+import game.scenes.Game;
 
-import static game.Game.SNAKE_TAIL_SCALE;
+import static game.scenes.Game.SNAKE_TAIL_SCALE;
 import static game.items.SnakeHead.REFLECTANCE;
 
 /**

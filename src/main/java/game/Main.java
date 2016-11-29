@@ -2,6 +2,7 @@ package game;
 
 import engine.GameEngine;
 import engine.IGameLogic;
+import game.scenes.Game;
 
 /**
  * @author Jake stanger

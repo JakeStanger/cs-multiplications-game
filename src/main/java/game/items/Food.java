@@ -9,8 +9,8 @@ import engine.loaders.obj.OBJLoader;
 import game.enums.Direction;
 import org.joml.Vector3f;
 
-import static game.Game.GRID_SIZE;
-import static game.Game.MAP_SIZE;
+import static game.scenes.Game.GRID_SIZE;
+import static game.scenes.Game.MAP_SIZE;
 
 /**
  * @author Jake stanger

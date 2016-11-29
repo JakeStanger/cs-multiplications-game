@@ -1,4 +1,4 @@
-package game;
+package game.scenes;
 
 import engine.items.GameItem;
 import game.items.MenuButton;

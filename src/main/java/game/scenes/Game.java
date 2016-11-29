@@ -1,4 +1,4 @@
-package game;
+package game.scenes;
 
 import engine.*;
 import engine.graph.Camera;
@@ -8,6 +8,7 @@ import engine.graph.lights.PointLight;
 import engine.graph.lights.SpotLight;
 import engine.items.GameItem;
 import engine.sound.SoundManager;
+import game.Hud;
 import game.items.*;
 import org.joml.Vector2f;
 import org.joml.Vector3f;
@@ -21,7 +22,7 @@ import static org.lwjgl.glfw.GLFW.*;
  * @author Jake stanger
  * Main game class for 3D snake.
  */
-public class Game implements IGameLogic
+public class Game implements IGameLogic, IScene //TODO integrate into GameLoop
 {
 	private static final float MOUSE_SENSITIVITY = 0.2f, CAMERA_POS_STEP = 0.1f;
 	

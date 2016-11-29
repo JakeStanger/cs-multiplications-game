@@ -7,7 +7,7 @@ import engine.graph.Material;
 import engine.graph.Mesh;
 import engine.graph.Texture;
 import engine.loaders.obj.OBJLoader;
-import game.Game;
+import game.scenes.Game;
 import game.enums.Direction;
 import game.wrappers.TurnPoint;
 import org.joml.Vector3f;
@@ -15,7 +15,7 @@ import org.joml.Vector3f;
 import java.util.ArrayList;
 import java.util.List;
 
-import static game.Game.*;
+import static game.scenes.Game.*;
 import static org.lwjgl.glfw.GLFW.*;
 
 /**

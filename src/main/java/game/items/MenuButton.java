@@ -22,10 +22,6 @@ public class MenuButton extends GameItem
 		Mesh mesh = OBJLoader.loadMesh("/models/menu/" + meshName);
 		mesh.setMaterial(MAT_DESELECTED);
 		this.setMesh(mesh);
-		this.setPosition(10, 10, 10);
-		
-		this.getRotation().rotateX(1.57f);
-		this.getRotation().rotateZ(0.52f);
 		this.setScale(0.5f);
 	}
 }

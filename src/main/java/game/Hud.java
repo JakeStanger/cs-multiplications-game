@@ -19,7 +19,7 @@ public class Hud implements IHud
 	
 	private TextLabel scoreLabel;
 	
-	Hud() throws Exception
+	public Hud() throws Exception
 	{
 		this.hudItems = new ArrayList<>();
 		
@@ -38,7 +38,7 @@ public class Hud implements IHud
 		return Utils.gameItemListToArray(hudItems);
 	}
 	
-	void updateSize(Window window)
+	public void updateSize(Window window)
 	{
 		for(GameItem gameItem : this.hudItems)
 			gameItem.setPosition(gameItem.getPosition().x, gameItem.getPosition().y, 0);

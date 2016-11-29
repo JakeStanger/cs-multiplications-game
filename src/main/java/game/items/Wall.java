@@ -6,7 +6,7 @@ import engine.graph.Texture;
 import engine.items.GameItem;
 import engine.loaders.obj.OBJLoader;
 
-import static game.Game.MAP_SIZE;
+import static game.scenes.Game.MAP_SIZE;
 
 /**
  * @author Jake stanger

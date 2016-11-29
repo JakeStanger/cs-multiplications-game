@@ -2,7 +2,7 @@ package game.items;
 
 import engine.Utils;
 import engine.items.GameItem;
-import game.Game;
+import game.scenes.Game;
 import game.enums.Direction;
 import game.wrappers.TurnPoint;
 
