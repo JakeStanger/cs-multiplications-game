@@ -9,10 +9,7 @@ import engine.graph.Renderer;
 import engine.graph.lights.DirectionalLight;
 import engine.items.GameItem;
 import engine.sound.SoundManager;
-import game.GameLogic;
 import game.Hud;
-import game.Main;
-import game.items.MenuButton;
 import org.joml.Vector3f;
 
 import java.util.ArrayList;
@@ -24,16 +21,25 @@ import static org.lwjgl.glfw.GLFW.*;
  * @author Jake stanger
  *         TODO Write JavaDoc
  */
-public class Menu implements IScene
+public class Maths implements IScene
 {
 	private static final int MENU_COOLDOWN_TIME = 5;
 	
-	private static final int PLAY_ID = 0;
-	private static final int LEADERBOARDS_ID = 1;
-	private static final int OPTIONS_ID = 2;
-	private static final int QUIT_ID = 3;
+	private static final int DIGIT_ONE_ID = 0;
+	private static final int MULTIPLY_ID = 1;
+	private static final int DIGIT_TWO_ID = 2;
 	
-	private List<GameItem> menuItems;
+	private static final int OPT_ONE_ID = 3;
+	private static final int OPT_TWO_ID = 4;
+	private static final int OPT_THREE_ID = 5;
+	private static final int OPT_FOUR_ID = 6;
+	
+	private static final int TOTAL_MAJOR_COMPONENTS = 7;
+	private static final int DIGIT_COMPONENTS = 2;
+	private static final int MULTIPLY_COMPONENTS = 1;
+	private static final int OPTION_COMPONENTS = 3;
+	
+	private List<List<GameItem>> gameItems;
 	
 	private final Renderer renderer;
 	private final SoundManager soundManager;
@@ -45,7 +51,7 @@ public class Menu implements IScene
 	private int selectedOption = 0;
 	private int menuCooldown = MENU_COOLDOWN_TIME;
 	
-	public Menu()
+	public Maths()
 	{
 		this.renderer = new Renderer();
 		this.soundManager = new SoundManager();
@@ -60,24 +66,29 @@ public class Menu implements IScene
 		
 		this.scene = new Scene();
 		
-		menuItems = new ArrayList<>();
+		//--Add game items--
+		gameItems = new ArrayList<>();
+		for(int i = 0; i < TOTAL_MAJOR_COMPONENTS; i++) gameItems.add(new ArrayList<>());
 		
-		menuItems.add(new MenuButton("play"));
-		menuItems.add(new MenuButton("leaderboards"));
-		menuItems.add(new MenuButton("options"));
-		menuItems.add(new MenuButton("quit"));
-		
-		menuItems.get(0).setSelected(true);
-		
-		for(int i = 0; i < menuItems.size(); i++)
+		gameItems.get(MULTIPLY_ID).add(new GameItem());
+		for(int i = 0; i < DIGIT_COMPONENTS; i++)
 		{
-			menuItems.get(i).getRotation()
-					.rotateX((float)Math.toRadians(90f));
-			menuItems.get(i).setPosition(-5, 8-i*2, -18);
+			gameItems.get(DIGIT_ONE_ID).add(new GameItem());
+			gameItems.get(DIGIT_TWO_ID).add(new GameItem());
+		}
+		
+		for(int i = 0; i < OPTION_COMPONENTS; i++)
+		{
+			for(int j = OPT_ONE_ID; j < OPT_FOUR_ID+1; j++)
+				gameItems.get(i).add(new GameItem());
 		}
 		
 		this.setupLighting();
-		this.scene.setGameItems(menuItems);
+		
+		//Add items to scene
+		List<GameItem> sceneGameItems = new ArrayList<>();
+		this.gameItems.forEach(sceneGameItems::addAll);
+		this.scene.setGameItems(sceneGameItems);
 	}
 	
 	private void setupLighting()
@@ -97,7 +108,7 @@ public class Menu implements IScene
 	private void selectNextOption()
 	{
 		this.selectedOption++;
-		if(this.selectedOption == this.menuItems.size()) this.selectedOption = 0;
+		if(this.selectedOption == OPT_FOUR_ID+1) this.selectedOption = OPT_ONE_ID;
 		
 		this.updateSelected();
 	}
@@ -105,38 +116,36 @@ public class Menu implements IScene
 	private void selectPrevOption()
 	{
 		this.selectedOption--;
-		if(this.selectedOption == -1) this.selectedOption = this.menuItems.size()-1;
+		if(this.selectedOption == OPT_ONE_ID-1) this.selectedOption = OPT_FOUR_ID;
 		
 		this.updateSelected();
 	}
 	
-	private void updateSelected()
+	private void updateSelected() //TODO Cast gameItem to button?
 	{
-		for(int i = 0; i < this.menuItems.size(); i++)
+		for(int i = OPT_ONE_ID; i < OPT_FOUR_ID+1; i++)
 		{
-			MenuButton button = (MenuButton) this.menuItems.get(i);
-			
-			if(i == this.selectedOption) button.setSelected(true);
-			else button.setSelected(false);
+			if(i == this.selectedOption)
+				for(GameItem gameItem : this.gameItems.get(i)) gameItem.setSelected(true);
+			else
+				for(GameItem gameItem : this.gameItems.get(i)) gameItem.setSelected(false);
 		}
 	}
 	
-	private void triggerOption(Window window)
+	private void triggerOption(Window window) //TODO Finish method
 	{
 		try
 		{
 			switch (this.selectedOption)
 			{
-				case PLAY_ID:
-					((GameLogic) Main.getGameLogic()).setScene(new Game(), window);
+				case OPT_ONE_ID:
 					break;
-				case LEADERBOARDS_ID:
-					break; //TODO Switch to leaderboards view
-				case OPTIONS_ID:
-					break; //TODO Switch to options view
-				case QUIT_ID:
-					this.cleanup();
-					System.exit(0);
+				case OPT_TWO_ID:
+					break;
+				case OPT_THREE_ID:
+					break;
+				case OPT_FOUR_ID:
+					break;
 			}
 		}
 		catch(Exception e)
@@ -150,7 +159,7 @@ public class Menu implements IScene
 	{
 		
 	}
-		
+	
 	@Override
 	public void input(Window window, MouseInput mouseInput)
 	{
@@ -163,7 +172,7 @@ public class Menu implements IScene
 			
 			if (window.isKeyPressed(GLFW_KEY_SPACE) || window.isKeyPressed(GLFW_KEY_ENTER)) this.triggerOption(window);
 			
-			this.menuCooldown = Menu.MENU_COOLDOWN_TIME;
+			this.menuCooldown = Maths.MENU_COOLDOWN_TIME;
 		}
 	}
 	
