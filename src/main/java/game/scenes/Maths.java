@@ -1,13 +1,13 @@
 package game.scenes;
 
-import engine.MouseInput;
-import engine.Scene;
-import engine.SceneLight;
-import engine.Window;
+import engine.*;
 import engine.graph.Camera;
+import engine.graph.Material;
+import engine.graph.Mesh;
 import engine.graph.Renderer;
 import engine.graph.lights.DirectionalLight;
 import engine.items.GameItem;
+import engine.loaders.obj.OBJLoader;
 import engine.sound.SoundManager;
 import game.Hud;
 import org.joml.Vector3f;
@@ -25,8 +25,9 @@ public class Maths implements IScene
 {
 	private static final int MENU_COOLDOWN_TIME = 5;
 	
-	private static final int DIGIT_ONE_ID = 0;
-	private static final int MULTIPLY_ID = 1;
+	private static final int MULTIPLY_ID = 0;
+	
+	private static final int DIGIT_ONE_ID = 1;
 	private static final int DIGIT_TWO_ID = 2;
 	
 	private static final int OPT_ONE_ID = 3;
@@ -36,8 +37,9 @@ public class Maths implements IScene
 	
 	private static final int TOTAL_MAJOR_COMPONENTS = 7;
 	private static final int DIGIT_COMPONENTS = 2;
-	private static final int MULTIPLY_COMPONENTS = 1;
 	private static final int OPTION_COMPONENTS = 3;
+	
+	private static final Material MATERIAL = new Material(new Vector3f(0.6f, 0, 0.8f), 1);
 	
 	private List<List<GameItem>> gameItems;
 	
@@ -70,25 +72,89 @@ public class Maths implements IScene
 		gameItems = new ArrayList<>();
 		for(int i = 0; i < TOTAL_MAJOR_COMPONENTS; i++) gameItems.add(new ArrayList<>());
 		
-		gameItems.get(MULTIPLY_ID).add(new GameItem());
-		for(int i = 0; i < DIGIT_COMPONENTS; i++)
+		GameItem multiplySign = new GameItem();
+		Mesh multiplyMesh = OBJLoader.loadMesh("/models/chars/x.obj");
+		multiplyMesh.setMaterial(new Material(new Vector3f(0.6f, 0, 0.8f), 1));
+		multiplySign.setMesh(multiplyMesh);
+		multiplySign.setPosition(0, 0, -5);
+		gameItems.get(MULTIPLY_ID).add(multiplySign);
+		
+		for(int i = 0; i < DIGIT_COMPONENTS; i++) //TODO Set positions
 		{
 			gameItems.get(DIGIT_ONE_ID).add(new GameItem());
 			gameItems.get(DIGIT_TWO_ID).add(new GameItem());
 		}
 		
-		for(int i = 0; i < OPTION_COMPONENTS; i++)
+		/*for(int i = 0; i < OPTION_COMPONENTS; i++)
 		{
-			for(int j = OPT_ONE_ID; j < OPT_FOUR_ID+1; j++)
-				gameItems.get(i).add(new GameItem());
-		}
+			for (int j = OPT_ONE_ID; j < OPT_FOUR_ID + 1; j++)
+				gameItems.get(j).add(new GameItem());
+		}*/
+		
+		//Rotate all to be right way up
+		for(List<GameItem> gameItems : this.gameItems)
+			for(GameItem gameItem : gameItems) gameItem.getRotation().rotateX((float)(Math.toRadians(90)));
 		
 		this.setupLighting();
+		
+		this.generateQuestion();
 		
 		//Add items to scene
 		List<GameItem> sceneGameItems = new ArrayList<>();
 		this.gameItems.forEach(sceneGameItems::addAll);
 		this.scene.setGameItems(sceneGameItems);
+	}
+	
+	private void generateQuestion()
+	{
+		//Generate random values
+		int num1 = Utils.getRandomIntBetween(1, 12);
+		int num2 = Utils.getRandomIntBetween(1, 12);
+		int ans = num1*num2;
+		
+		//A, B, C or D
+		int ansPos = Utils.getRandomIntBetween(0, 3);
+		int[] answers = new int[4];
+		
+		for(int i = 0; i < answers.length; i++)
+		{
+			if(i == ansPos) answers[i] = ans;
+			else answers[i] = Utils.getRandomIntBetween(1, 12)*Utils.getRandomIntBetween(1, 12);
+		}
+		
+		//Convert to string and prepend 0 if necessary
+		String num1S = Integer.toString(num1);
+		if(num1S.length() < 2) num1S = "0" + num1S;
+		
+		String num2S = Integer.toString(num2);
+		if(num2S.length() < 2) num2S = "0" + num2S;
+		
+		String[] answersS = new String[4];
+		for(int i = 0; i < answers.length; i++)
+		{
+			answersS[i] = Integer.toString(answers[i]);
+			while(answersS[i].length() < 3) answersS[i] = "0" + answersS[i];
+		}
+		
+		try
+		{
+			//Set digit meshes
+			for(int i = DIGIT_ONE_ID; i < OPT_FOUR_ID+1; i++)
+			{
+				for(int j = 0; j < gameItems.get(i).size(); j++)
+				{
+					String path = "/models/chars/" + (i == DIGIT_ONE_ID ? num1S.toCharArray()[j] :
+							(j <= DIGIT_TWO_ID ? num2S.toCharArray()[j] : answersS[i].toCharArray()[j])) + ".obj";
+					Mesh mesh = OBJLoader.loadMesh(path);
+					mesh.setMaterial(MATERIAL);
+					gameItems.get(i).get(j).setMesh(mesh);
+				}
+			}
+		}
+		catch(Exception e)
+		{
+			e.printStackTrace();
+		}
 	}
 	
 	private void setupLighting()

@@ -72,8 +72,8 @@ public class Menu implements IScene
 		for(int i = 0; i < menuItems.size(); i++)
 		{
 			menuItems.get(i).getRotation()
-					.rotateX((float)Math.toRadians(90f));
-			menuItems.get(i).setPosition(-5, 8-i*2, -18);
+					.rotateX((float)Math.toRadians(110-i*4));
+			menuItems.get(i).setPosition(-4.5f, 8.5f-i*2.2f, -18);
 		}
 		
 		this.setupLighting();
@@ -128,7 +128,7 @@ public class Menu implements IScene
 			switch (this.selectedOption)
 			{
 				case PLAY_ID:
-					((GameLogic) Main.getGameLogic()).setScene(new Game(), window);
+					((GameLogic) Main.getGameLogic()).setScene(new Maths(), window);
 					break;
 				case LEADERBOARDS_ID:
 					break; //TODO Switch to leaderboards view
