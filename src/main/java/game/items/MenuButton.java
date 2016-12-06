@@ -24,6 +24,8 @@ public class MenuButton extends GameItem
 		this.setMesh(mesh);
 	}
 	
+	public MenuButton(){}
+	
 	@Override
 	public void setSelected(boolean selected)
 	{

@@ -10,6 +10,7 @@ import engine.items.GameItem;
 import engine.loaders.obj.OBJLoader;
 import engine.sound.SoundManager;
 import game.Hud;
+import game.items.MenuButton;
 import org.joml.Vector3f;
 
 import java.util.ArrayList;
@@ -23,7 +24,7 @@ import static org.lwjgl.glfw.GLFW.*;
  */
 public class Maths implements IScene
 {
-	private static final int MENU_COOLDOWN_TIME = 5;
+	private static final int MENU_COOLDOWN_TIME = 10;
 	
 	private static final int MULTIPLY_ID = 0;
 	
@@ -40,6 +41,8 @@ public class Maths implements IScene
 	private static final int OPTION_COMPONENTS = 3;
 	
 	private static final Material MATERIAL = new Material(new Vector3f(0.6f, 0, 0.8f), 1);
+	
+	private static final float Z_POS = -5;
 	
 	private List<List<GameItem>> gameItems;
 	
@@ -76,24 +79,38 @@ public class Maths implements IScene
 		Mesh multiplyMesh = OBJLoader.loadMesh("/models/chars/x.obj");
 		multiplyMesh.setMaterial(new Material(new Vector3f(0.6f, 0, 0.8f), 1));
 		multiplySign.setMesh(multiplyMesh);
-		multiplySign.setPosition(0, 0, -5);
+		multiplySign.setPosition(-0.35f, 1.5f, Z_POS);
 		gameItems.get(MULTIPLY_ID).add(multiplySign);
 		
-		for(int i = 0; i < DIGIT_COMPONENTS; i++) //TODO Set positions
+		//Create and position digits
+		for(int i = 0; i < DIGIT_COMPONENTS; i++)
 		{
-			gameItems.get(DIGIT_ONE_ID).add(new GameItem());
-			gameItems.get(DIGIT_TWO_ID).add(new GameItem());
+			GameItem digitOne = new GameItem();
+			GameItem digitTwo = new GameItem();
+			
+			digitOne.setPosition(-2.35f+i, 1.5f, Z_POS);
+			digitTwo.setPosition(0.7f+i, 1.5f, Z_POS);
+			
+			gameItems.get(DIGIT_ONE_ID).add(digitOne);
+			gameItems.get(DIGIT_TWO_ID).add(digitTwo);
 		}
 		
-		/*for(int i = 0; i < OPTION_COMPONENTS; i++)
+		//Create and position options
+		for(int i = OPT_ONE_ID; i < OPT_FOUR_ID+1; i++)
 		{
-			for (int j = OPT_ONE_ID; j < OPT_FOUR_ID + 1; j++)
-				gameItems.get(j).add(new GameItem());
-		}*/
+			for(int j = 0; j < OPTION_COMPONENTS; j++)
+			{
+				GameItem gameItem = new MenuButton();
+				gameItem.setPosition(i % 2 != 0 ? -4.5f+j: 1.8f+j,
+						i < OPT_THREE_ID ? 0 : -2,
+						Z_POS);
+				gameItems.get(i).add(gameItem);
+			}
+		}
 		
 		//Rotate all to be right way up
 		for(List<GameItem> gameItems : this.gameItems)
-			for(GameItem gameItem : gameItems) gameItem.getRotation().rotateX((float)(Math.toRadians(90)));
+			for(GameItem gameItem : gameItems) gameItem.getRotation().rotateX((float) Math.toRadians(90));
 		
 		this.setupLighting();
 		
@@ -143,8 +160,10 @@ public class Maths implements IScene
 			{
 				for(int j = 0; j < gameItems.get(i).size(); j++)
 				{
+					//Get path for any digit/option in one line
 					String path = "/models/chars/" + (i == DIGIT_ONE_ID ? num1S.toCharArray()[j] :
-							(j <= DIGIT_TWO_ID ? num2S.toCharArray()[j] : answersS[i].toCharArray()[j])) + ".obj";
+							(i <= DIGIT_TWO_ID ? num2S.toCharArray()[j] :
+									answersS[i-OPT_ONE_ID].toCharArray()[j])) + ".obj";
 					Mesh mesh = OBJLoader.loadMesh(path);
 					mesh.setMaterial(MATERIAL);
 					gameItems.get(i).get(j).setMesh(mesh);
@@ -200,24 +219,7 @@ public class Maths implements IScene
 	
 	private void triggerOption(Window window) //TODO Finish method
 	{
-		try
-		{
-			switch (this.selectedOption)
-			{
-				case OPT_ONE_ID:
-					break;
-				case OPT_TWO_ID:
-					break;
-				case OPT_THREE_ID:
-					break;
-				case OPT_FOUR_ID:
-					break;
-			}
-		}
-		catch(Exception e)
-		{
-			e.printStackTrace();
-		}
+		
 	}
 	
 	@Override
