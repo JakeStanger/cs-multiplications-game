@@ -15,6 +15,8 @@ public class Main
 	
 	private static IGameLogic gameLogic;
 	
+	private static GameEngine gameEngine;
+	
 	public static void main(String[] args)
 	{
 		try
@@ -28,8 +30,8 @@ public class Main
 			opts.compatibleProfile = false;
 			
 			Main.gameLogic = new GameLogic(new Menu()); //Create game
-			GameEngine gameEngine = new GameEngine(WINDOW_TITLE, WINDOW_WIDTH, WINDOW_HEIGHT, vSync, opts, gameLogic);
-			gameEngine.start();
+			Main.gameEngine = new GameEngine(WINDOW_TITLE, WINDOW_WIDTH, WINDOW_HEIGHT, vSync, opts, gameLogic);
+			Main.gameEngine.start();
 		}
 		catch(Exception e)
 		{
@@ -41,5 +43,10 @@ public class Main
 	public static IGameLogic getGameLogic()
 	{
 		return gameLogic;
+	}
+	
+	public static GameEngine getGameEngine()
+	{
+		return gameEngine;
 	}
 }

@@ -3,7 +3,11 @@ package game;
 import engine.IGameLogic;
 import engine.MouseInput;
 import engine.Window;
+import engine.items.GameItem;
+import game.scenes.Game;
 import game.scenes.IScene;
+
+import java.util.List;
 
 /**
  * @author Jake stanger
@@ -12,6 +16,9 @@ import game.scenes.IScene;
 public class GameLogic implements IGameLogic
 {
 	private IScene scene;
+	
+	private List<GameItem> gameItemList;
+	private int score;
 	
 	public GameLogic(IScene scene)
 	{
@@ -50,8 +57,20 @@ public class GameLogic implements IGameLogic
 	
 	public void setScene(IScene scene, Window window) throws Exception
 	{
+		if(this.scene instanceof Game)
+		{
+			this.gameItemList = ((Game)this.scene).getGameItems();
+			this.score = ((Game)this.scene).getScore();
+		}
+		
 		this.cleanup();
 		this.scene = scene;
-		this.init(window);
+		
+		if(!(scene instanceof Game)) this.init(window);
+		else
+		{
+			if(this.gameItemList != null) ((Game)this.scene).init(window, this.gameItemList, this.score);
+			else this.init(window);
+		}
 	}
 }

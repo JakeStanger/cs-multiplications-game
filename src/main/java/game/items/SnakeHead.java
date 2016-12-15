@@ -7,8 +7,11 @@ import engine.graph.Material;
 import engine.graph.Mesh;
 import engine.graph.Texture;
 import engine.loaders.obj.OBJLoader;
-import game.scenes.Game;
+import game.GameLogic;
+import game.Main;
 import game.enums.Direction;
+import game.scenes.Game;
+import game.scenes.Maths;
 import game.wrappers.TurnPoint;
 import org.joml.Vector3f;
 
@@ -95,7 +98,7 @@ public class SnakeHead extends SnakePiece
 		if(inRange)
 		{
 			Game.food.randomlyPlaceOnMap();
-			Game.incrementScore();
+			//Game.incrementScore();
 			
 			//Add next tail piece
 			for(SnakeTail tail : this.tailList) if(!tail.isVisible())
@@ -103,6 +106,16 @@ public class SnakeHead extends SnakePiece
 				tail.setVisible(true);
 				tail.setPopIn(true);
 				break;
+			}
+			
+			//Ask maths question
+			try
+			{
+				((GameLogic)Main.getGameLogic()).setScene(new Maths(), Main.getGameEngine().getWindow());
+			}
+			catch (Exception e)
+			{
+				e.printStackTrace();
 			}
 		}
 	}

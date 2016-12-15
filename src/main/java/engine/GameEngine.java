@@ -133,6 +133,11 @@ public class GameEngine implements Runnable
 		window.update();
 	}
 	
+	public Window getWindow()
+	{
+		return window;
+	}
+	
 	protected void cleanup()
 	{
 		gameLogic.cleanup();

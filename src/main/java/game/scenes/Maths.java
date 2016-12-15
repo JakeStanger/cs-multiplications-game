@@ -9,7 +9,9 @@ import engine.graph.lights.DirectionalLight;
 import engine.items.GameItem;
 import engine.loaders.obj.OBJLoader;
 import engine.sound.SoundManager;
+import game.GameLogic;
 import game.Hud;
+import game.Main;
 import game.items.MenuButton;
 import org.joml.Vector3f;
 
@@ -20,7 +22,7 @@ import static org.lwjgl.glfw.GLFW.*;
 
 /**
  * @author Jake stanger
- *         TODO Write JavaDoc
+ * Scene for maths questions.
  */
 public class Maths implements IScene
 {
@@ -32,7 +34,6 @@ public class Maths implements IScene
 	private static final int DIGIT_TWO_ID = 2;
 	
 	private static final int OPT_ONE_ID = 3;
-	private static final int OPT_TWO_ID = 4;
 	private static final int OPT_THREE_ID = 5;
 	private static final int OPT_FOUR_ID = 6;
 	
@@ -55,6 +56,8 @@ public class Maths implements IScene
 	
 	private int selectedOption = 0;
 	private int menuCooldown = MENU_COOLDOWN_TIME;
+	
+	private int answerPos;
 	
 	public Maths()
 	{
@@ -127,15 +130,15 @@ public class Maths implements IScene
 		//Generate random values
 		int num1 = Utils.getRandomIntBetween(1, 12);
 		int num2 = Utils.getRandomIntBetween(1, 12);
-		int ans = num1*num2;
+		int answer = num1*num2;
 		
 		//A, B, C or D
-		int ansPos = Utils.getRandomIntBetween(0, 3);
+		answerPos = Utils.getRandomIntBetween(0, 3);
 		int[] answers = new int[4];
 		
 		for(int i = 0; i < answers.length; i++)
 		{
-			if(i == ansPos) answers[i] = ans;
+			if(i == answerPos) answers[i] = answer;
 			else answers[i] = Utils.getRandomIntBetween(1, 12)*Utils.getRandomIntBetween(1, 12);
 		}
 		
@@ -206,7 +209,7 @@ public class Maths implements IScene
 		this.updateSelected();
 	}
 	
-	private void updateSelected() //TODO Cast gameItem to button?
+	private void updateSelected()
 	{
 		for(int i = OPT_ONE_ID; i < OPT_FOUR_ID+1; i++)
 		{
@@ -217,9 +220,31 @@ public class Maths implements IScene
 		}
 	}
 	
-	private void triggerOption(Window window) //TODO Finish method
+	private void triggerOption(Window window)
 	{
-		
+		if(selectedOption-OPT_ONE_ID == answerPos)
+		{
+			try
+			{
+				((GameLogic) Main.getGameLogic()).setScene(new Game(), window);
+				Game.incrementScore();
+			}
+			catch (Exception e)
+			{
+				e.printStackTrace();
+			}
+		}
+		else
+		{
+			try
+			{
+				((GameLogic) Main.getGameLogic()).setScene(new Menu(), window);
+			}
+			catch (Exception e)
+			{
+				e.printStackTrace();
+			}
+		}
 	}
 	
 	@Override

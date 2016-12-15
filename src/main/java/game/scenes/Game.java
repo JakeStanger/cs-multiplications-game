@@ -51,6 +51,8 @@ public class Game implements IScene
 	private static int score;
 	private static boolean running;
 	
+	private List<GameItem> gameItems;
+	
 	public Game()
 	{
 		this.renderer = new Renderer();
@@ -63,22 +65,13 @@ public class Game implements IScene
 	@Override
 	public void init(Window window) throws Exception
 	{
-		this.renderer.init(window);
-		this.soundManager.init();
-		
-		this.scene = new Scene();
-		
-		List<GameItem> gameItems = new ArrayList<>();
+		gameItems = new ArrayList<>();
 		
 		snakeHead = new SnakeHead(new Vector3f(MAP_SIZE/2, MAP_SIZE/2, -MAP_SIZE/2));
 		snakeHead.setScale(SNAKE_HEAD_SCALE);
 		
 		food = new Food();
 		food.setScale(FOOD_SCALE);
-		
-		gameItems.add(snakeHead);
-		gameItems.add(food);
-		//gameItems.add(new MenuButton("play.obj"));
 		
 		//Add snake tails
 		for(int i = 0; i < MAX_SNAKE_LENGTH; i++)
@@ -104,13 +97,26 @@ public class Game implements IScene
 		Wall wall = new Wall();
 		gameItems.add(wall);
 		
-		//Lighting
+		this.init(window, gameItems, 0);
+	}
+	
+	public void init(Window window, List<GameItem> gameItems, int score) throws Exception
+	{
+		this.renderer.init(window);
+		this.soundManager.init();
+		
+		this.scene = new Scene();
+		
+ 		gameItems.add(snakeHead);
+		gameItems.add(food);
+		
 		this.setupLighting();
-		
 		this.scene.setGameItems(gameItems);
-		hud = new Hud();
 		
-		running = true;
+		hud = new Hud();
+		this.setScore(score);
+		
+		Game.setRunning(true);
 	}
 	
 	private void setupLighting()
@@ -161,7 +167,6 @@ public class Game implements IScene
 		
 		if (window.isKeyPressed(GLFW_KEY_Z)) this.cameraDelta.y = -1;
 		else if (window.isKeyPressed(GLFW_KEY_X)) this.cameraDelta.y = 1;
-		
 	}
 	
 	@Override
@@ -195,6 +200,17 @@ public class Game implements IScene
 		hud.getScoreLabel().setText("Score: " + score);
 	}
 	
+	private void setScore(int score)
+	{
+		Game.score = score;
+		hud.getScoreLabel().setText("Score: " + score);
+	}
+	
+	public int getScore()
+	{
+		return score;
+	}
+	
 	public static boolean isRunning()
 	{
 		return running;
@@ -210,6 +226,11 @@ public class Game implements IScene
 	{
 		if (hud != null) hud.updateSize(window);
 		this.renderer.render(window, camera, scene, hud);
+	}
+	
+	public List<GameItem> getGameItems()
+	{
+		return gameItems;
 	}
 	
 	@Override

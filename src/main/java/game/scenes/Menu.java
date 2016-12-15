@@ -128,7 +128,7 @@ public class Menu implements IScene
 			switch (this.selectedOption)
 			{
 				case PLAY_ID:
-					((GameLogic) Main.getGameLogic()).setScene(new Maths(), window);
+					((GameLogic) Main.getGameLogic()).setScene(new Game(), window);
 					break;
 				case LEADERBOARDS_ID:
 					break; //TODO Switch to leaderboards view
