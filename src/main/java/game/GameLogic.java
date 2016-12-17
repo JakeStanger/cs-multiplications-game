@@ -6,7 +6,9 @@ import engine.Window;
 import engine.items.GameItem;
 import game.scenes.Game;
 import game.scenes.IScene;
+import org.joml.Vector3f;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -18,6 +20,7 @@ public class GameLogic implements IGameLogic
 	private IScene scene;
 	
 	private List<GameItem> gameItemList;
+	private Vector3f cameraPos;
 	private int score;
 	
 	public GameLogic(IScene scene)
@@ -57,10 +60,12 @@ public class GameLogic implements IGameLogic
 	
 	public void setScene(IScene scene, Window window) throws Exception
 	{
+		//Backup game items
 		if(this.scene instanceof Game)
 		{
-			this.gameItemList = ((Game)this.scene).getGameItems();
+			this.gameItemList = new ArrayList<>(((Game) this.scene).getGameItems());
 			this.score = ((Game)this.scene).getScore();
+			this.cameraPos = new Vector3f(((Game)this.scene).getCamera().getPosition());
 		}
 		
 		this.cleanup();
@@ -69,7 +74,7 @@ public class GameLogic implements IGameLogic
 		if(!(scene instanceof Game)) this.init(window);
 		else
 		{
-			if(this.gameItemList != null) ((Game)this.scene).init(window, this.gameItemList, this.score);
+			if(this.gameItemList != null) ((Game)this.scene).init(window, this.gameItemList, this.score, this.cameraPos);
 			else this.init(window);
 		}
 	}

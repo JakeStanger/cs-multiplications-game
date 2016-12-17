@@ -97,21 +97,24 @@ public class Game implements IScene
 		Wall wall = new Wall();
 		gameItems.add(wall);
 		
-		this.init(window, gameItems, 0);
+		this.init(window, gameItems, 0, new Vector3f(MAP_SIZE/2, MAP_SIZE/2 + 10, -MAP_SIZE/2 + 10));
 	}
 	
-	public void init(Window window, List<GameItem> gameItems, int score) throws Exception
+	public void init(Window window, List<GameItem> gameItems, int score, Vector3f cameraPos) throws Exception
 	{
 		this.renderer.init(window);
 		this.soundManager.init();
 		
 		this.scene = new Scene();
 		
+		this.camera.setPosition(cameraPos.x, cameraPos.y, cameraPos.z);
+		
  		gameItems.add(snakeHead);
 		gameItems.add(food);
 		
 		this.setupLighting();
 		this.scene.setGameItems(gameItems);
+		this.gameItems = gameItems;
 		
 		hud = new Hud();
 		this.setScore(score);
@@ -231,6 +234,11 @@ public class Game implements IScene
 	public List<GameItem> getGameItems()
 	{
 		return gameItems;
+	}
+	
+	public Camera getCamera()
+	{
+		return this.camera;
 	}
 	
 	@Override
