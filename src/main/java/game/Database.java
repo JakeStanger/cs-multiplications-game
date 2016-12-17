@@ -23,7 +23,7 @@ public class Database
 			Connection connection = Database.connectToDatabase();
 			Statement statement = connection.createStatement();
 			
-			ResultSet resultSet = statement.executeQuery("SELECT * FROM default_scores");
+			ResultSet resultSet = statement.executeQuery("SELECT * FROM default_scores ORDER BY Score DESC");
 			
 			List<LeaderboardEntry> leaderboardEntries = new ArrayList<>();
 			while(resultSet.next())
