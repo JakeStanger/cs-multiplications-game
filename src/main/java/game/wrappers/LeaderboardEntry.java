@@ -7,7 +7,7 @@ package game.wrappers;
  */
 public class LeaderboardEntry
 {
-	private char[] name;
+	private String name;
 	private int score;
 	
 	public LeaderboardEntry(String name, int score)
@@ -16,12 +16,12 @@ public class LeaderboardEntry
 		this.score = score;
 	}
 	
-	public char[] getName()
+	public String getName()
 	{
 		return name;
 	}
 	
-	public void setName(char[] name)
+	public void setName(String name)
 	{
 		this.name = name;
 	}

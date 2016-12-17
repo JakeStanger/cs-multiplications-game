@@ -16,11 +16,10 @@ public class Database
 	private static final String username = "java";
 	private static final String password = "JS2tgLzXIbFmZxMv";
 	
-	public static List<LeaderboardEntry> readAllScores()
+	public static List<LeaderboardEntry> readAllEntries()
 	{
 		try
 		{
-			
 			Connection connection = Database.connectToDatabase();
 			Statement statement = connection.createStatement();
 			
@@ -43,6 +42,22 @@ public class Database
 		}
 		
 		return null;
+	}
+	
+	public static void addEntry(LeaderboardEntry entry)
+	{
+		try
+		{
+			Connection connection = Database.connectToDatabase();
+			Statement statement = connection.createStatement();
+			statement.executeUpdate("INSERT INTO `default_scores` (Name, Score) VALUES('" +
+					entry.getName() + "'," + entry.getScore() + ")");
+			connection.close();
+		}
+		catch (Exception e)
+		{
+			e.printStackTrace();
+		}
 	}
 	
 	private static Connection connectToDatabase() throws SQLException
