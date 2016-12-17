@@ -19,6 +19,9 @@ public class Main
 	
 	public static void main(String[] args)
 	{
+		Database.readAllEntries();
+		//for(int i = 0; i < 200; i++) Database.addEntry(new LeaderboardEntry(Integer.toString(Utils.getRandomIntBetween(0, 999)), Utils.getRandomIntBetween(0, 30)));
+		
 		try
 		{
 			boolean vSync = true; //Enable vsync

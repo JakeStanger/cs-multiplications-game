@@ -80,7 +80,7 @@ public class Maths implements IScene
 		
 		GameItem multiplySign = new GameItem();
 		Mesh multiplyMesh = OBJLoader.loadMesh("/models/chars/x.obj");
-		multiplyMesh.setMaterial(new Material(new Vector3f(0.6f, 0, 0.8f), 1));
+		multiplyMesh.setMaterial(MATERIAL);
 		multiplySign.setMesh(multiplyMesh);
 		multiplySign.setPosition(-0.35f, 1.5f, Z_POS);
 		gameItems.get(MULTIPLY_ID).add(multiplySign);

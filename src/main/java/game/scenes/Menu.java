@@ -131,7 +131,7 @@ public class Menu implements IScene
 					((GameLogic) Main.getGameLogic()).setScene(new Game(), window);
 					break;
 				case LEADERBOARDS_ID:
-					break; //TODO Switch to leaderboards view
+					((GameLogic) Main.getGameLogic()).setScene(new Leaderboard(), window);
 				case OPTIONS_ID:
 					break; //TODO Switch to options view
 				case QUIT_ID:
