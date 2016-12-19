@@ -132,8 +132,10 @@ public class Menu implements IScene
 					break;
 				case LEADERBOARDS_ID:
 					((GameLogic) Main.getGameLogic()).setScene(new Leaderboard(), window);
+					break;
 				case OPTIONS_ID:
-					break; //TODO Switch to options view
+					((GameLogic) Main.getGameLogic()).setScene(new Options(), window);
+					break;
 				case QUIT_ID:
 					this.cleanup();
 					System.exit(0);
