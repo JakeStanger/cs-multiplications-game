@@ -33,6 +33,8 @@ public class Options implements IScene
 	private static final String ALPHABET = "abcdefghijklmnopqrstuvwxyz";
 	private static final float Z_LEVEL = -5;
 	
+	private static final int MENU_COOLDOWN_TIME = 7;
+	
 	private List<List<GameItem>> gameItems;
 	
 	private final Renderer renderer;
@@ -43,6 +45,7 @@ public class Options implements IScene
 	private static Hud hud;
 	
 	private int selectedID = 0, selectedOption = 0;
+	private int menuCooldown = MENU_COOLDOWN_TIME;
 	
 	public Options()
 	{
@@ -81,6 +84,20 @@ public class Options implements IScene
 			this.gameItems.add(digitList);
 		}
 		
+		//--Save button
+		List<GameItem> charList = new ArrayList<>();
+		final String text = "save";
+		for(int i = 0; i < text.length(); i++)
+		{
+			Mesh mesh = OBJLoader.loadMesh("/models/chars/" + text.toCharArray()[i] + ".obj");
+			mesh.setMaterial(MATERIAL);
+			MenuButton digit = new MenuButton();
+			digit.setMesh(mesh);
+			digit.setPosition(-4.5f+i, -2, Z_LEVEL);
+			charList.add(digit);
+		}
+		this.gameItems.add(charList);
+		
 		//Select first option
 		for (GameItem gameItem : this.gameItems.get(0)) gameItem.setSelected(true);
 		
@@ -118,45 +135,52 @@ public class Options implements IScene
 	@Override
 	public void input(Window window, MouseInput mouseInput)
 	{
-		int prevId = this.selectedID;
-		int prevSelected = this.selectedOption;
+		if(this.menuCooldown > 0) this.menuCooldown--;
 		
-		//Option selection
-		if(window.isKeyPressed(GLFW_KEY_RIGHT)) this.selectedOption++;
-		else if(window.isKeyPressed(GLFW_KEY_LEFT)) this.selectedOption--;
-		
-		//Wrap around
-		if(selectedOption == gameItems.size()) selectedOption = 0;
-		if(selectedOption == -1) selectedOption = gameItems.size()-1;
-		
-		//Update selected option
-		if(this.selectedOption != prevSelected)
-			for (int i = 0; i < gameItems.size(); i++)
-				if (i == this.selectedOption) for (GameItem gameItem : gameItems.get(i)) gameItem.setSelected(true);
-				else for (GameItem gameItem : gameItems.get(i)) gameItem.setSelected(false);
-		
-		//Option cycle
-		if(window.isKeyPressed(GLFW_KEY_UP)) this.selectedID--;
-		else if(window.isKeyPressed(GLFW_KEY_DOWN)) this.selectedID++;
-		
-		//Wrap around
-		if(selectedID == ALPHABET.length()) selectedID = 0;
-		if(selectedID == -1) selectedID = ALPHABET.length()-1;
-		
-		//Update cycled item
-		if(this.selectedID != prevId)
-			for (int i = 0; i < ALPHABET.length(); i++)
-				if (i == this.selectedID) this.gameItems.get(selectedOption).get(i).setScale(1);
-				else this.gameItems.get(selectedOption).get(i).setScale(0);
-		
-		//Quit to menu
-		if(window.isKeyPressed(GLFW_KEY_Q) || window.isKeyPressed(GLFW_KEY_ESCAPE)) try
+		if(this.menuCooldown == 0)
 		{
-			((GameLogic) Main.getGameLogic()).setScene(new Menu(), window);
-		}
-		catch (Exception e)
-		{
-			e.printStackTrace();
+			int prevId = this.selectedID;
+			int prevSelected = this.selectedOption;
+			
+			//Option selection
+			if (window.isKeyPressed(GLFW_KEY_RIGHT)) this.selectedOption++;
+			else if (window.isKeyPressed(GLFW_KEY_LEFT)) this.selectedOption--;
+			
+			//Wrap around
+			if (selectedOption == gameItems.size()) selectedOption = 0;
+			if (selectedOption == -1) selectedOption = gameItems.size() - 1;
+			
+			//Update selected option
+			if (this.selectedOption != prevSelected)
+				for (int i = 0; i < gameItems.size(); i++)
+					if (i == this.selectedOption) for (GameItem gameItem : gameItems.get(i)) gameItem.setSelected(true);
+					else for (GameItem gameItem : gameItems.get(i)) gameItem.setSelected(false);
+			
+			//Option cycle
+			if (window.isKeyPressed(GLFW_KEY_UP)) this.selectedID--;
+			else if (window.isKeyPressed(GLFW_KEY_DOWN)) this.selectedID++;
+			
+			//Wrap around
+			if (selectedID == ALPHABET.length()) selectedID = 0;
+			if (selectedID == -1) selectedID = ALPHABET.length() - 1;
+			
+			//Update cycled item
+			if (this.selectedID != prevId)
+				for (int i = 0; i < ALPHABET.length(); i++)
+					if (i == this.selectedID) this.gameItems.get(selectedOption).get(i).setScale(1);
+					else this.gameItems.get(selectedOption).get(i).setScale(0);
+			
+			//Quit to menu
+			if (window.isKeyPressed(GLFW_KEY_Q) || window.isKeyPressed(GLFW_KEY_ESCAPE)) try
+			{
+				((GameLogic) Main.getGameLogic()).setScene(new Menu(), window);
+			}
+			catch (Exception e)
+			{
+				e.printStackTrace();
+			}
+			
+			this.menuCooldown = MENU_COOLDOWN_TIME;
 		}
 	}
 	
