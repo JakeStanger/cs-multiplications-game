@@ -5,20 +5,23 @@ import engine.Scene;
 import engine.SceneLight;
 import engine.Window;
 import engine.graph.Camera;
+import engine.graph.Material;
+import engine.graph.Mesh;
 import engine.graph.Renderer;
 import engine.graph.lights.DirectionalLight;
 import engine.items.GameItem;
+import engine.loaders.obj.OBJLoader;
 import engine.sound.SoundManager;
 import game.GameLogic;
 import game.Hud;
 import game.Main;
+import game.items.MenuButton;
 import org.joml.Vector3f;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import static org.lwjgl.glfw.GLFW.GLFW_KEY_ESCAPE;
-import static org.lwjgl.glfw.GLFW.GLFW_KEY_Q;
+import static org.lwjgl.glfw.GLFW.*;
 
 /**
  * @author Jake stanger
@@ -26,6 +29,10 @@ import static org.lwjgl.glfw.GLFW.GLFW_KEY_Q;
  */
 public class Options implements IScene
 {
+	private static final Material MATERIAL = new Material(new Vector3f(0.6f, 0, 0.8f), 1);
+	private static final String ALPHABET = "abcdefghijklmnopqrstuvwxyz";
+	private static final float Z_LEVEL = -5;
+	
 	private List<List<GameItem>> gameItems;
 	
 	private final Renderer renderer;
@@ -35,7 +42,7 @@ public class Options implements IScene
 	private Scene scene;
 	private static Hud hud;
 	
-	private int height;
+	private int selectedID = 0, selectedOption = 0;
 	
 	public Options()
 	{
@@ -54,7 +61,38 @@ public class Options implements IScene
 		
 		this.gameItems = new ArrayList<>();
 		
+		Mesh a = OBJLoader.loadMesh("/models/chars/a.obj");
+		a.setMaterial(MATERIAL);
+		
+		//--Username digits--
+		for(int i = 0; i < 3; i++)
+		{
+			List<GameItem> digitList = new ArrayList<>();
+			for(char c : ALPHABET.toCharArray())
+			{
+				Mesh mesh = OBJLoader.loadMesh("/models/chars/" + c + ".obj");
+				mesh.setMaterial(MATERIAL);
+				MenuButton digit = new MenuButton();
+				digit.setMesh(mesh);
+				digit.setPosition(-4.5f+i, 2, Z_LEVEL);
+				if(c != 'a') digit.setScale(0);
+				digitList.add(digit);
+			}
+			this.gameItems.add(digitList);
+		}
+		
+		//Select first option
+		for (GameItem gameItem : this.gameItems.get(0)) gameItem.setSelected(true);
+		
+		//Rotate all to be right way up
+		for(List<GameItem> gameItems : this.gameItems)
+			for(GameItem gameItem : gameItems) gameItem.getRotation().rotateX((float) Math.toRadians(90));
+		
 		this.setupLighting();
+		
+		List<GameItem> sceneGameItems = new ArrayList<>();
+		this.gameItems.forEach(sceneGameItems::addAll);
+		this.scene.setGameItems(sceneGameItems);
 	}
 	
 	private void setupLighting()
@@ -80,6 +118,37 @@ public class Options implements IScene
 	@Override
 	public void input(Window window, MouseInput mouseInput)
 	{
+		int prevId = this.selectedID;
+		int prevSelected = this.selectedOption;
+		
+		//Option selection
+		if(window.isKeyPressed(GLFW_KEY_RIGHT)) this.selectedOption++;
+		else if(window.isKeyPressed(GLFW_KEY_LEFT)) this.selectedOption--;
+		
+		//Wrap around
+		if(selectedOption == gameItems.size()) selectedOption = 0;
+		if(selectedOption == -1) selectedOption = gameItems.size()-1;
+		
+		//Update selected option
+		if(this.selectedOption != prevSelected)
+			for (int i = 0; i < gameItems.size(); i++)
+				if (i == this.selectedOption) for (GameItem gameItem : gameItems.get(i)) gameItem.setSelected(true);
+				else for (GameItem gameItem : gameItems.get(i)) gameItem.setSelected(false);
+		
+		//Option cycle
+		if(window.isKeyPressed(GLFW_KEY_UP)) this.selectedID--;
+		else if(window.isKeyPressed(GLFW_KEY_DOWN)) this.selectedID++;
+		
+		//Wrap around
+		if(selectedID == ALPHABET.length()) selectedID = 0;
+		if(selectedID == -1) selectedID = ALPHABET.length()-1;
+		
+		//Update cycled item
+		if(this.selectedID != prevId)
+			for (int i = 0; i < ALPHABET.length(); i++)
+				if (i == this.selectedID) this.gameItems.get(selectedOption).get(i).setScale(1);
+				else this.gameItems.get(selectedOption).get(i).setScale(0);
+		
 		//Quit to menu
 		if(window.isKeyPressed(GLFW_KEY_Q) || window.isKeyPressed(GLFW_KEY_ESCAPE)) try
 		{
