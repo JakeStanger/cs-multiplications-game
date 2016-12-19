@@ -6,6 +6,7 @@ import engine.Window;
 import engine.items.GameItem;
 import game.scenes.Game;
 import game.scenes.IScene;
+import game.scenes.Menu;
 import org.joml.Vector3f;
 
 import java.util.ArrayList;
@@ -61,7 +62,7 @@ public class GameLogic implements IGameLogic
 	public void setScene(IScene scene, Window window) throws Exception
 	{
 		//Backup game items
-		if(this.scene instanceof Game)
+		if(this.scene instanceof Game && !(scene instanceof Menu))
 		{
 			this.gameItemList = new ArrayList<>(((Game) this.scene).getGameItems());
 			this.score = ((Game)this.scene).getScore();

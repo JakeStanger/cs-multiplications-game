@@ -236,14 +236,7 @@ public class Maths implements IScene
 		}
 		else
 		{
-			try
-			{
-				((GameLogic) Main.getGameLogic()).setScene(new Menu(), window);
-			}
-			catch (Exception e)
-			{
-				e.printStackTrace();
-			}
+			Game.endGame();
 		}
 	}
 	

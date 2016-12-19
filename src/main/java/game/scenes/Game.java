@@ -1,6 +1,9 @@
 package game.scenes;
 
-import engine.*;
+import engine.MouseInput;
+import engine.Scene;
+import engine.SceneLight;
+import engine.Window;
 import engine.graph.Camera;
 import engine.graph.Renderer;
 import engine.graph.lights.DirectionalLight;
@@ -8,8 +11,15 @@ import engine.graph.lights.PointLight;
 import engine.graph.lights.SpotLight;
 import engine.items.GameItem;
 import engine.sound.SoundManager;
+import game.Database;
+import game.GameLogic;
 import game.Hud;
-import game.items.*;
+import game.Main;
+import game.items.Food;
+import game.items.SnakeHead;
+import game.items.SnakeTail;
+import game.items.Wall;
+import game.wrappers.LeaderboardEntry;
 import org.joml.Vector2f;
 import org.joml.Vector3f;
 
@@ -194,6 +204,21 @@ public class Game implements IScene
 		}
 	}
 	
+	public static void endGame()
+	{
+		Game.setRunning(false);
+		Database.addEntry(new LeaderboardEntry("wew", score)); //TODO Name config
+		try
+		{
+			Thread.sleep(2500);
+			((GameLogic)Main.getGameLogic()).setScene(new Menu(), Main.getGameEngine().getWindow());
+		}
+		catch (Exception e)
+		{
+			e.printStackTrace();
+		}
+	}
+	
 	/**
 	 * Increase the score by one.
 	 */
@@ -214,12 +239,12 @@ public class Game implements IScene
 		return score;
 	}
 	
-	public static boolean isRunning()
+	private static boolean isRunning()
 	{
 		return running;
 	}
 	
-	public static void setRunning(boolean running)
+	private static void setRunning(boolean running)
 	{
 		Game.running = running;
 	}

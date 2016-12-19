@@ -126,14 +126,14 @@ public class SnakeHead extends SnakePiece
 			if (Utils.areVectorsInRange(this.getPosition(), tail.getPosition(),
 					GRID_SIZE * SNAKE_TAIL_SCALE))
 				//We can safely assume we never crash into the head first tail piece
-				if (tail.getID() > 1 && tail.isVisible()) Game.setRunning(false);
+				if (tail.getID() > 1 && tail.isVisible()) Game.endGame();
 	}
 	
 	private void collisionCheckWall()
 	{
 		if(this.getPosition().x <= 0 || this.getPosition().y <= 0 || this.getPosition().z >= 0 ||
 				this.getPosition().x >= MAP_SIZE || this.getPosition().y >= MAP_SIZE || this.getPosition().z <= -MAP_SIZE)
-			Game.setRunning(false); //^^z-axis is inverted^^
+			Game.endGame(); //^^z-axis is inverted^^
 	}
 	
 	public void addTailToList(SnakeTail tail)
