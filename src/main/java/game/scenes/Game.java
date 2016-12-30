@@ -161,6 +161,14 @@ public class Game implements IScene
 		SoundSource sourceGameOver = new SoundSource(false, false);
 		sourceGameOver.setBuffer(bufferGameOver.getBufferID());
 		soundManager.addSoundSource(Sound.GAME_OVER.toString(), sourceGameOver);
+		
+		//Music
+		SoundBuffer bufferMusic = new SoundBuffer("/sounds/wagon_wheel.ogg");
+		soundManager.addSoundBuffer(bufferMusic);
+		SoundSource sourceMusic = new SoundSource(true, false);
+		sourceMusic.setBuffer(bufferMusic.getBufferID());
+		soundManager.addSoundSource(Sound.GAME_MUSIC.toString(), sourceMusic);
+		soundManager.playSoundSource(Sound.GAME_MUSIC.toString());
 	}
 	
 	private void setupLighting()

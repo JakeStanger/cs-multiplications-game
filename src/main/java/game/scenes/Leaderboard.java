@@ -140,6 +140,14 @@ public class Leaderboard implements IScene
 		SoundSource sourceBoopHigh = new SoundSource(false, false);
 		sourceBoopHigh.setBuffer(bufferBoopHigh.getBufferID());
 		this.soundManager.addSoundSource(Sound.BOOP_HIGH.toString(), sourceBoopHigh);
+		
+		//Music
+		SoundBuffer bufferMusic = new SoundBuffer("/sounds/overworld.ogg");
+		this.soundManager.addSoundBuffer(bufferMusic);
+		SoundSource sourceMusic = new SoundSource(true, false);
+		sourceMusic.setBuffer(bufferMusic.getBufferID());
+		this.soundManager.addSoundSource(Sound.MENU_MUSIC.toString(), sourceMusic);
+		this.soundManager.playSoundSource(Sound.MENU_MUSIC.toString());
 	}
 	
 	private void setupLighting()
