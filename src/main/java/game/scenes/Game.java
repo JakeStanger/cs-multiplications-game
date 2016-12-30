@@ -11,7 +11,7 @@ import engine.graph.lights.PointLight;
 import engine.graph.lights.SpotLight;
 import engine.items.GameItem;
 import engine.sound.SoundManager;
-import game.Database;
+import game.utils.Database;
 import game.GameLogic;
 import game.Hud;
 import game.Main;

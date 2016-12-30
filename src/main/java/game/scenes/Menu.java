@@ -13,6 +13,7 @@ import game.GameLogic;
 import game.Hud;
 import game.Main;
 import game.items.MenuButton;
+import game.utils.OptionsIO;
 import org.joml.Vector3f;
 
 import java.util.ArrayList;
@@ -78,6 +79,8 @@ public class Menu implements IScene
 		
 		this.setupLighting();
 		this.scene.setGameItems(menuItems);
+		
+		OptionsIO.readFromFile();
 	}
 	
 	private void setupLighting()

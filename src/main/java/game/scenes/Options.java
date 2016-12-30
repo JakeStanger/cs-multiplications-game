@@ -16,6 +16,7 @@ import game.GameLogic;
 import game.Hud;
 import game.Main;
 import game.items.MenuButton;
+import game.utils.OptionsIO;
 import org.joml.Vector3f;
 
 import java.util.ArrayList;
@@ -35,6 +36,9 @@ public class Options implements IScene
 	
 	private static final int MENU_COOLDOWN_TIME = 7;
 	
+	private static final int NAME_DIGIT_ONE_ID = 0, NAME_DIGIT_TWO_ID = 1, NAME_DIGIT_THREE_ID = 2;
+	private static final int SAVE_ID = 3;
+	
 	private List<List<GameItem>> gameItems;
 	
 	private final Renderer renderer;
@@ -44,7 +48,7 @@ public class Options implements IScene
 	private Scene scene;
 	private static Hud hud;
 	
-	private int selectedID = 0, selectedOption = 0;
+	private int selectedCycle = 0, selectedOption = 0;
 	private int menuCooldown = MENU_COOLDOWN_TIME;
 	
 	public Options()
@@ -78,7 +82,7 @@ public class Options implements IScene
 				MenuButton digit = new MenuButton();
 				digit.setMesh(mesh);
 				digit.setPosition(-4.5f+i, 2, Z_LEVEL);
-				if(c != 'a') digit.setScale(0);
+				if(c != Values.name[i]) digit.setScale(0);
 				digitList.add(digit);
 			}
 			this.gameItems.add(digitList);
@@ -132,6 +136,17 @@ public class Options implements IScene
 		
 	}
 	
+	private void triggerOption(Window window)
+	{
+		switch(this.selectedOption)
+		{
+			case SAVE_ID:
+				OptionsIO.writeToFile();
+				OptionsIO.readFromFile(); //TODO Move
+				break;
+		}
+	}
+	
 	@Override
 	public void input(Window window, MouseInput mouseInput)
 	{
@@ -139,7 +154,7 @@ public class Options implements IScene
 		
 		if(this.menuCooldown == 0)
 		{
-			int prevId = this.selectedID;
+			int prevCycle = this.selectedCycle;
 			int prevSelected = this.selectedOption;
 			
 			//Option selection
@@ -157,18 +172,32 @@ public class Options implements IScene
 					else for (GameItem gameItem : gameItems.get(i)) gameItem.setSelected(false);
 			
 			//Option cycle
-			if (window.isKeyPressed(GLFW_KEY_UP)) this.selectedID--;
-			else if (window.isKeyPressed(GLFW_KEY_DOWN)) this.selectedID++;
+			if (window.isKeyPressed(GLFW_KEY_UP)) this.selectedCycle--;
+			else if (window.isKeyPressed(GLFW_KEY_DOWN)) this.selectedCycle++;
 			
 			//Wrap around
-			if (selectedID == ALPHABET.length()) selectedID = 0;
-			if (selectedID == -1) selectedID = ALPHABET.length() - 1;
+			if (selectedCycle == this.gameItems.get(this.selectedOption).size()) selectedCycle = 0;
+			if (selectedCycle == -1) selectedCycle = this.gameItems.get(this.selectedOption).size() - 1;
 			
 			//Update cycled item
-			if (this.selectedID != prevId)
-				for (int i = 0; i < ALPHABET.length(); i++)
-					if (i == this.selectedID) this.gameItems.get(selectedOption).get(i).setScale(1);
-					else this.gameItems.get(selectedOption).get(i).setScale(0);
+			if (this.selectedCycle != prevCycle)
+			{
+				for (int i = 0; i < this.gameItems.get(selectedOption).size(); i++)
+				{
+					if (i == this.selectedCycle)
+					{
+						this.gameItems.get(selectedOption).get(i).setScale(1);
+						
+						if(this.selectedOption <= NAME_DIGIT_THREE_ID)
+							Values.name[selectedOption] = ALPHABET.toCharArray()[i];
+					}
+					else if(this.selectedOption != SAVE_ID)
+						this.gameItems.get(selectedOption).get(i).setScale(0);
+				}
+			}
+			
+			if (window.isKeyPressed(GLFW_KEY_SPACE) || window.isKeyPressed(GLFW_KEY_ENTER)) this.triggerOption(window);
+			
 			
 			//Quit to menu
 			if (window.isKeyPressed(GLFW_KEY_Q) || window.isKeyPressed(GLFW_KEY_ESCAPE)) try
@@ -198,5 +227,10 @@ public class Options implements IScene
 		this.soundManager.cleanup();
 		
 		if (hud != null) hud.cleanup();
+	}
+	
+	public static class Values
+	{
+		public static char[] name = new char[3];
 	}
 }

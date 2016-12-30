@@ -1,4 +1,4 @@
-package game;
+package game.utils;
 
 import game.wrappers.LeaderboardEntry;
 

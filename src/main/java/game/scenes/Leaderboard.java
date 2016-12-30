@@ -12,7 +12,7 @@ import engine.graph.lights.DirectionalLight;
 import engine.items.GameItem;
 import engine.loaders.obj.OBJLoader;
 import engine.sound.SoundManager;
-import game.Database;
+import game.utils.Database;
 import game.GameLogic;
 import game.Hud;
 import game.Main;
