@@ -165,7 +165,7 @@ public class DummyGame implements IGameLogic
 		
 		hud = new Hud("DEMO");
 		
-		// Sounds
+		// Sound
 		this.soundMgr.init();
 		this.soundMgr.setAttenuationModel(AL11.AL_EXPONENT_DISTANCE);
 		setupSounds();

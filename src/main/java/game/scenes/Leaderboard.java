@@ -11,13 +11,17 @@ import engine.graph.Renderer;
 import engine.graph.lights.DirectionalLight;
 import engine.items.GameItem;
 import engine.loaders.obj.OBJLoader;
+import engine.sound.SoundBuffer;
 import engine.sound.SoundManager;
+import engine.sound.SoundSource;
+import game.enums.Sound;
 import game.utils.Database;
 import game.GameLogic;
 import game.Hud;
 import game.Main;
 import game.wrappers.LeaderboardEntry;
 import org.joml.Vector3f;
+import org.lwjgl.openal.AL11;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -112,9 +116,30 @@ public class Leaderboard implements IScene
 		
 		this.setupLighting();
 		
+		this.soundManager.init();
+		this.soundManager.setAttenuationModel(AL11.AL_EXPONENT_DISTANCE);
+		this.setupSounds();
+		
 		List<GameItem> sceneGameItems = new ArrayList<>();
 		this.gameItems.forEach(sceneGameItems::addAll);
 		this.scene.setGameItems(sceneGameItems);
+	}
+	
+	private void setupSounds() throws Exception
+	{
+		//Boop
+		SoundBuffer bufferBoop = new SoundBuffer("/sounds/boop.ogg");
+		this.soundManager.addSoundBuffer(bufferBoop);
+		SoundSource sourceBoop = new SoundSource(false, false);
+		sourceBoop.setBuffer(bufferBoop.getBufferID());
+		this.soundManager.addSoundSource(Sound.BOOP.toString(), sourceBoop);
+		
+		//Boop high
+		SoundBuffer bufferBoopHigh = new SoundBuffer("/sounds/boop_high.ogg");
+		this.soundManager.addSoundBuffer(bufferBoopHigh);
+		SoundSource sourceBoopHigh = new SoundSource(false, false);
+		sourceBoopHigh.setBuffer(bufferBoopHigh.getBufferID());
+		this.soundManager.addSoundSource(Sound.BOOP_HIGH.toString(), sourceBoopHigh);
 	}
 	
 	private void setupLighting()
@@ -181,6 +206,9 @@ public class Leaderboard implements IScene
 		//Stop camera from going past end of list
 		if((camera.getPosition().y > START_Y && cameraDelta.y > 0) || (camera.getPosition().y < -height && cameraDelta.y < 0))
 			cameraDelta.y = 0;
+		
+		//Play boop
+		if(cameraDelta.y != 0) this.soundManager.playSoundSource(Sound.BOOP.toString());
 		
 		//Quit to menu
 		if(window.isKeyPressed(GLFW_KEY_Q) || window.isKeyPressed(GLFW_KEY_ESCAPE)) try

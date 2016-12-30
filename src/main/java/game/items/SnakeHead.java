@@ -7,9 +7,11 @@ import engine.graph.Material;
 import engine.graph.Mesh;
 import engine.graph.Texture;
 import engine.loaders.obj.OBJLoader;
+import engine.sound.SoundManager;
 import game.GameLogic;
 import game.Main;
 import game.enums.Direction;
+import game.enums.Sound;
 import game.scenes.Game;
 import game.scenes.Maths;
 import game.wrappers.TurnPoint;
@@ -58,47 +60,51 @@ public class SnakeHead extends SnakePiece
 		this.tailList = new ArrayList<>();
 	}
 	
-	public void input(Window window, MouseInput mouseInput)
+	public void input(Window window, MouseInput mouseInput, SoundManager soundManager)
 	{
-		if (window.isKeyPressed(GLFW_KEY_UP)) this.addTurnPoint(Direction.FORWARDS);
-		else if (window.isKeyPressed(GLFW_KEY_DOWN)) this.addTurnPoint(Direction.BACKWARDS);
+		if (window.isKeyPressed(GLFW_KEY_UP)) this.addTurnPoint(Direction.FORWARDS, soundManager);
+		else if (window.isKeyPressed(GLFW_KEY_DOWN)) this.addTurnPoint(Direction.BACKWARDS, soundManager);
 		
-		if (window.isKeyPressed(GLFW_KEY_LEFT)) this.addTurnPoint(Direction.LEFT);
-		else if (window.isKeyPressed(GLFW_KEY_RIGHT)) this.addTurnPoint(Direction.RIGHT);
+		if (window.isKeyPressed(GLFW_KEY_LEFT)) this.addTurnPoint(Direction.LEFT, soundManager);
+		else if (window.isKeyPressed(GLFW_KEY_RIGHT)) this.addTurnPoint(Direction.RIGHT, soundManager);
 		
-		if (window.isKeyPressed(GLFW_KEY_RIGHT_CONTROL)) this.addTurnPoint(Direction.DOWN);
-		else if (window.isKeyPressed(GLFW_KEY_RIGHT_SHIFT)) this.addTurnPoint(Direction.UP);
+		if (window.isKeyPressed(GLFW_KEY_RIGHT_CONTROL)) this.addTurnPoint(Direction.DOWN, soundManager);
+		else if (window.isKeyPressed(GLFW_KEY_RIGHT_SHIFT)) this.addTurnPoint(Direction.UP, soundManager);
 	}
 	
-	private void addTurnPoint(Direction direction)
+	private void addTurnPoint(Direction direction, SoundManager soundManager)
 	{
 		Direction lastDirection = this.turnPoints.get(this.turnPoints.size()-1).getDirection();
 		if(direction != lastDirection && direction != Direction.getOppositeDirection(this.direction))
+		{
 			this.turnPoints.add(new TurnPoint(direction, Utils.getNextRoundedVector(this.getPosition(), this.direction, GRID_SIZE)));
+			soundManager.playSoundSource(Sound.BOOP.toString());
+		}
 	}
 	
-	public void update()
+	public void update(SoundManager soundManager)
 	{
 		super.update();
-		this.collisionCheck();
+		this.collisionCheck(soundManager);
 	}
 	
-	private void collisionCheck()
+	private void collisionCheck(SoundManager soundManager)
 	{
-		this.collisionCheckFood();
+		this.collisionCheckFood(soundManager);
 		this.collisionCheckSnake();
 		this.collisionCheckWall();
 	}
 	
-	private void collisionCheckFood()
+	private void collisionCheckFood(SoundManager soundManager)
 	{
 		boolean inRange = Utils.areVectorsInRange(this.getPosition(), Game.food.getPosition(),
 				GRID_SIZE * FOOD_SCALE);
 		
 		if(inRange)
 		{
+			soundManager.playSoundSource(Sound.BOOP_HIGH.toString());
+			
 			Game.food.randomlyPlaceOnMap();
-			//Game.incrementScore();
 			
 			//Add next tail piece
 			for(SnakeTail tail : this.tailList) if(!tail.isVisible())

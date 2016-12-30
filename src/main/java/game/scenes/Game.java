@@ -10,7 +10,10 @@ import engine.graph.lights.DirectionalLight;
 import engine.graph.lights.PointLight;
 import engine.graph.lights.SpotLight;
 import engine.items.GameItem;
+import engine.sound.SoundBuffer;
 import engine.sound.SoundManager;
+import engine.sound.SoundSource;
+import game.enums.Sound;
 import game.utils.Database;
 import game.GameLogic;
 import game.Hud;
@@ -22,6 +25,7 @@ import game.items.Wall;
 import game.wrappers.LeaderboardEntry;
 import org.joml.Vector2f;
 import org.joml.Vector3f;
+import org.lwjgl.openal.AL11;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -47,7 +51,7 @@ public class Game implements IScene
 	public static final int MAP_SIZE = 30;
 	
 	private final Renderer renderer;
-	private final SoundManager soundManager;
+	private static final SoundManager soundManager = new SoundManager();
 	private final Camera camera;
 	
 	private Scene scene;
@@ -66,7 +70,6 @@ public class Game implements IScene
 	public Game()
 	{
 		this.renderer = new Renderer();
-		this.soundManager = new SoundManager();
 		this.camera = new Camera();
 		
 		this.cameraDelta = new Vector3f(0, 0, 0);
@@ -113,7 +116,7 @@ public class Game implements IScene
 	public void init(Window window, List<GameItem> gameItems, int score, Vector3f cameraPos) throws Exception
 	{
 		this.renderer.init(window);
-		this.soundManager.init();
+		soundManager.init();
 		
 		this.scene = new Scene();
 		
@@ -126,10 +129,38 @@ public class Game implements IScene
 		this.scene.setGameItems(gameItems);
 		this.gameItems = gameItems;
 		
+		soundManager.init();
+		soundManager.setAttenuationModel(AL11.AL_EXPONENT_DISTANCE);
+		this.setupSounds();
+		
 		hud = new Hud();
 		this.setScore(score);
 		
 		Game.setRunning(true);
+	}
+	
+	private void setupSounds() throws Exception
+	{
+		//Boop
+		SoundBuffer bufferBoop = new SoundBuffer("/sounds/boop.ogg");
+		soundManager.addSoundBuffer(bufferBoop);
+		SoundSource sourceBoop = new SoundSource(false, false);
+		sourceBoop.setBuffer(bufferBoop.getBufferID());
+		soundManager.addSoundSource(Sound.BOOP.toString(), sourceBoop);
+		
+		//Boop high
+		SoundBuffer bufferBoopHigh = new SoundBuffer("/sounds/boop_high.ogg");
+		soundManager.addSoundBuffer(bufferBoopHigh);
+		SoundSource sourceBoopHigh = new SoundSource(false, false);
+		sourceBoopHigh.setBuffer(bufferBoopHigh.getBufferID());
+		soundManager.addSoundSource(Sound.BOOP_HIGH.toString(), sourceBoopHigh);
+		
+		//Game over
+		SoundBuffer bufferGameOver = new SoundBuffer("/sounds/game_over.ogg");
+		soundManager.addSoundBuffer(bufferGameOver);
+		SoundSource sourceGameOver = new SoundSource(false, false);
+		sourceGameOver.setBuffer(bufferGameOver.getBufferID());
+		soundManager.addSoundSource(Sound.GAME_OVER.toString(), sourceGameOver);
 	}
 	
 	private void setupLighting()
@@ -165,7 +196,7 @@ public class Game implements IScene
 	public void input(Window window, MouseInput mouseInput)
 	{
 		this.moveCamera(window, mouseInput);
-		snakeHead.input(window, mouseInput);
+		snakeHead.input(window, mouseInput, soundManager);
 	}
 	
 	private void moveCamera(Window window, MouseInput mouseInput)
@@ -197,7 +228,7 @@ public class Game implements IScene
 		
 		if (isRunning())
 		{
-			snakeHead.update();
+			snakeHead.update(soundManager);
 			snakeHead.getTailList().forEach(SnakeTail::update);
 			
 			food.update();
@@ -206,8 +237,10 @@ public class Game implements IScene
 	
 	public static void endGame()
 	{
+		soundManager.playSoundSource(Sound.GAME_OVER.toString());
+		
 		Game.setRunning(false);
-		Database.addEntry(new LeaderboardEntry("wew", score)); //TODO Name config
+		Database.addEntry(new LeaderboardEntry(new String(Options.Values.name), score));
 		try
 		{
 			Thread.sleep(2500);
@@ -222,7 +255,7 @@ public class Game implements IScene
 	/**
 	 * Increase the score by one.
 	 */
-	public static void incrementScore()
+	static void incrementScore()
 	{
 		score++;
 		hud.getScoreLabel().setText("Score: " + score);
@@ -270,7 +303,7 @@ public class Game implements IScene
 	public void cleanup()
 	{
 		this.renderer.cleanup();
-		this.soundManager.cleanup();
+		soundManager.cleanup();
 		
 		if (hud != null) hud.cleanup();
 	}

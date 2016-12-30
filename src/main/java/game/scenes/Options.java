@@ -11,13 +11,17 @@ import engine.graph.Renderer;
 import engine.graph.lights.DirectionalLight;
 import engine.items.GameItem;
 import engine.loaders.obj.OBJLoader;
+import engine.sound.SoundBuffer;
 import engine.sound.SoundManager;
+import engine.sound.SoundSource;
 import game.GameLogic;
 import game.Hud;
 import game.Main;
+import game.enums.Sound;
 import game.items.MenuButton;
 import game.utils.OptionsIO;
 import org.joml.Vector3f;
+import org.lwjgl.openal.AL11;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -111,9 +115,30 @@ public class Options implements IScene
 		
 		this.setupLighting();
 		
+		this.soundManager.init();
+		this.soundManager.setAttenuationModel(AL11.AL_EXPONENT_DISTANCE);
+		this.setupSounds();
+		
 		List<GameItem> sceneGameItems = new ArrayList<>();
 		this.gameItems.forEach(sceneGameItems::addAll);
 		this.scene.setGameItems(sceneGameItems);
+	}
+	
+	private void setupSounds() throws Exception
+	{
+		//Boop
+		SoundBuffer bufferBoop = new SoundBuffer("/sounds/boop.ogg");
+		this.soundManager.addSoundBuffer(bufferBoop);
+		SoundSource sourceBoop = new SoundSource(false, false);
+		sourceBoop.setBuffer(bufferBoop.getBufferID());
+		this.soundManager.addSoundSource(Sound.BOOP.toString(), sourceBoop);
+		
+		//Boop high
+		SoundBuffer bufferBoopHigh = new SoundBuffer("/sounds/boop_high.ogg");
+		this.soundManager.addSoundBuffer(bufferBoopHigh);
+		SoundSource sourceBoopHigh = new SoundSource(false, false);
+		sourceBoopHigh.setBuffer(bufferBoopHigh.getBufferID());
+		this.soundManager.addSoundSource(Sound.BOOP_HIGH.toString(), sourceBoopHigh);
 	}
 	
 	private void setupLighting()
@@ -138,6 +163,9 @@ public class Options implements IScene
 	
 	private void triggerOption(Window window)
 	{
+		//Play boop
+		this.soundManager.playSoundSource(Sound.BOOP_HIGH.toString());
+		
 		switch(this.selectedOption)
 		{
 			case SAVE_ID:
@@ -208,6 +236,10 @@ public class Options implements IScene
 			{
 				e.printStackTrace();
 			}
+			
+			//Play sounds
+			if(this.selectedOption != prevSelected) this.soundManager.playSoundSource(Sound.BOOP.toString());
+			if(this.selectedCycle != prevCycle) this.soundManager.playSoundSource(Sound.BOOP_HIGH.toString());
 			
 			this.menuCooldown = MENU_COOLDOWN_TIME;
 		}

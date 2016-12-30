@@ -8,12 +8,16 @@ import engine.graph.Renderer;
 import engine.graph.lights.DirectionalLight;
 import engine.items.GameItem;
 import engine.loaders.obj.OBJLoader;
+import engine.sound.SoundBuffer;
 import engine.sound.SoundManager;
+import engine.sound.SoundSource;
 import game.GameLogic;
 import game.Hud;
 import game.Main;
+import game.enums.Sound;
 import game.items.MenuButton;
 import org.joml.Vector3f;
+import org.lwjgl.openal.AL11;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -117,6 +121,10 @@ public class Maths implements IScene
 		
 		this.setupLighting();
 		
+		this.soundManager.init();
+		this.soundManager.setAttenuationModel(AL11.AL_EXPONENT_DISTANCE);
+		this.setupSounds();
+		
 		this.generateQuestion();
 		
 		//Add items to scene
@@ -179,6 +187,23 @@ public class Maths implements IScene
 		}
 	}
 	
+	private void setupSounds() throws Exception
+	{
+		//Boop
+		SoundBuffer bufferBoop = new SoundBuffer("/sounds/boop.ogg");
+		this.soundManager.addSoundBuffer(bufferBoop);
+		SoundSource sourceBoop = new SoundSource(false, false);
+		sourceBoop.setBuffer(bufferBoop.getBufferID());
+		this.soundManager.addSoundSource(Sound.BOOP.toString(), sourceBoop);
+		
+		//Boop high
+		SoundBuffer bufferBoopHigh = new SoundBuffer("/sounds/boop_high.ogg");
+		this.soundManager.addSoundBuffer(bufferBoopHigh);
+		SoundSource sourceBoopHigh = new SoundSource(false, false);
+		sourceBoopHigh.setBuffer(bufferBoopHigh.getBufferID());
+		this.soundManager.addSoundSource(Sound.BOOP_HIGH.toString(), sourceBoopHigh);
+	}
+	
 	private void setupLighting()
 	{
 		final Vector3f ambientIntensity = new Vector3f(0.3f, 0.3f, 0.3f);
@@ -211,6 +236,9 @@ public class Maths implements IScene
 	
 	private void updateSelected()
 	{
+		//Play boop
+		this.soundManager.playSoundSource(Sound.BOOP.toString());
+		
 		for(int i = OPT_ONE_ID; i < OPT_FOUR_ID+1; i++)
 		{
 			if(i == this.selectedOption)
@@ -222,6 +250,9 @@ public class Maths implements IScene
 	
 	private void triggerOption(Window window)
 	{
+		//Play high boop sound
+		this.soundManager.playSoundSource(Sound.BOOP_HIGH.toString());
+		
 		if(selectedOption-OPT_ONE_ID == answerPos)
 		{
 			try

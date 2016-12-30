@@ -36,7 +36,7 @@ public enum Direction
 		switch(currentDirection)
 		{
 			case LEFT:
-				
+			
 		}
 		return null;
 	}
