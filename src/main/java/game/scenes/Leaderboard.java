@@ -169,6 +169,21 @@ public class Leaderboard implements IScene
 	{
 		//Update camera position
 		this.camera.movePosition(0, this.cameraDelta.y * 0.01f, 0);
+		
+		//--Sounds--
+		//Toggle music
+		SoundSource music = this.soundManager.getSoundSource(Sound.MENU_MUSIC.toString());
+		if(music.isPlaying() && Options.Values.muteMusic) music.stop();
+		else if(!music.isPlaying() && !Options.Values.muteMusic) music.play();
+		
+		//Toggle sound effects
+		SoundSource boop = this.soundManager.getSoundSource(Sound.BOOP.toString());
+		SoundSource boopHigh = this.soundManager.getSoundSource(Sound.BOOP_HIGH.toString());
+		if(Options.Values.muteSound)
+		{
+			if(boop.isPlaying()) boop.stop();
+			if(boopHigh.isPlaying()) boopHigh.stop();
+		}
 	}
 	
 	@Override

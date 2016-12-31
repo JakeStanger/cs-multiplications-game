@@ -24,6 +24,9 @@ public class OptionsIO
 		JsonObject object = new JsonObject();
 		object.addProperty("name", new String(Options.Values.name));
 		
+		object.addProperty("muteSound", Options.Values.muteSound);
+		object.addProperty("muteMusic", Options.Values.muteMusic);
+		
 		Gson gson = new GsonBuilder().setPrettyPrinting().create();
 		String json = gson.toJson(object);
 		
@@ -47,9 +50,16 @@ public class OptionsIO
 		JsonParser parser = new JsonParser();
 		try
 		{
-			JsonElement element = parser.parse(new FileReader("options.json"));
+			JsonObject object = parser.parse(new FileReader("options.json")).getAsJsonObject();
 			
-			Options.Values.name = element.getAsJsonObject().get("name").getAsString().toCharArray();
+			Options.Values.name = object.get("name").getAsString().toCharArray();
+			
+			Options.Values.muteSound = object.get("muteSound").getAsBoolean();
+			Options.Values.muteMusic = object.get("muteMusic").getAsBoolean();
+		}
+		catch (NullPointerException e)
+		{
+			System.out.println("Missing key - using default values");
 		}
 		catch(FileNotFoundException e)
 		{

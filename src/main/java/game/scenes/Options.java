@@ -36,12 +36,13 @@ public class Options implements IScene
 {
 	private static final Material MATERIAL = new Material(new Vector3f(0.6f, 0, 0.8f), 1);
 	private static final String ALPHABET = "abcdefghijklmnopqrstuvwxyz";
-	private static final float Z_LEVEL = -5;
+	private static final float Z_LEVEL = -6;
 	
 	private static final int MENU_COOLDOWN_TIME = 7;
 	
 	private static final int NAME_DIGIT_ONE_ID = 0, NAME_DIGIT_TWO_ID = 1, NAME_DIGIT_THREE_ID = 2;
-	private static final int SAVE_ID = 3;
+	private static final int MUTE_SOUND_ID = 3, MUTE_MUSIC_ID = 4;
+	private static final int SAVE_ID = 5;
 	
 	private List<List<GameItem>> gameItems;
 	
@@ -85,26 +86,19 @@ public class Options implements IScene
 				mesh.setMaterial(MATERIAL);
 				MenuButton digit = new MenuButton();
 				digit.setMesh(mesh);
-				digit.setPosition(-4.5f+i, 2, Z_LEVEL);
+				digit.setPosition(-5.5f+i, 2, Z_LEVEL);
 				if(c != Values.name[i]) digit.setScale(0);
 				digitList.add(digit);
 			}
 			this.gameItems.add(digitList);
 		}
 		
-		//--Save button
-		List<GameItem> charList = new ArrayList<>();
-		final String text = "save";
-		for(int i = 0; i < text.length(); i++)
-		{
-			Mesh mesh = OBJLoader.loadMesh("/models/chars/" + text.toCharArray()[i] + ".obj");
-			mesh.setMaterial(MATERIAL);
-			MenuButton digit = new MenuButton();
-			digit.setMesh(mesh);
-			digit.setPosition(-4.5f+i, -2, Z_LEVEL);
-			charList.add(digit);
-		}
-		this.gameItems.add(charList);
+		//Audio controls
+		this.gameItems.add(createWord("sounds", -5.5f, 1));
+		this.gameItems.add(createWord("music", 1, 1));
+		
+		//Save button
+		this.gameItems.add(createWord("save", -5.5f, -1));
 		
 		//Select first option
 		for (GameItem gameItem : this.gameItems.get(0)) gameItem.setSelected(true);
@@ -122,6 +116,22 @@ public class Options implements IScene
 		List<GameItem> sceneGameItems = new ArrayList<>();
 		this.gameItems.forEach(sceneGameItems::addAll);
 		this.scene.setGameItems(sceneGameItems);
+	}
+	
+	private List<GameItem> createWord(String text, float startX, float y) throws Exception
+	{
+		List<GameItem> charList = new ArrayList<>();
+		for(int i = 0; i < text.length(); i++)
+		{
+			Mesh mesh = OBJLoader.loadMesh("/models/chars/" + text.toCharArray()[i] + ".obj");
+			mesh.setMaterial(MATERIAL);
+			MenuButton digit = new MenuButton();
+			digit.setMesh(mesh);
+			digit.setPosition(startX+i, y, Z_LEVEL);
+			charList.add(digit);
+		}
+		
+		return charList;
 	}
 	
 	private void setupSounds() throws Exception
@@ -166,7 +176,19 @@ public class Options implements IScene
 	@Override
 	public void update(float interval, MouseInput mouseInput)
 	{
+		//Toggle music
+		SoundSource music = this.soundManager.getSoundSource(Sound.MENU_MUSIC.toString());
+		if(music.isPlaying() && Values.muteMusic) music.stop();
+		else if(!music.isPlaying() && !Values.muteMusic) music.play();
 		
+		//Toggle sound effects
+		SoundSource boop = this.soundManager.getSoundSource(Sound.BOOP.toString());
+		SoundSource boopHigh = this.soundManager.getSoundSource(Sound.BOOP_HIGH.toString());
+		if(Values.muteSound)
+		{
+			if(boop.isPlaying()) boop.stop();
+			if(boopHigh.isPlaying()) boopHigh.stop();
+		}
 	}
 	
 	private void triggerOption(Window window)
@@ -176,9 +198,14 @@ public class Options implements IScene
 		
 		switch(this.selectedOption)
 		{
+			case MUTE_SOUND_ID:
+				Values.muteSound = !Values.muteSound;
+				break;
+			case MUTE_MUSIC_ID:
+				Values.muteMusic = !Values.muteMusic;
+				break;
 			case SAVE_ID:
 				OptionsIO.writeToFile();
-				OptionsIO.readFromFile(); //TODO Move
 				break;
 		}
 	}
@@ -227,7 +254,7 @@ public class Options implements IScene
 						if(this.selectedOption <= NAME_DIGIT_THREE_ID)
 							Values.name[selectedOption] = ALPHABET.toCharArray()[i];
 					}
-					else if(this.selectedOption != SAVE_ID)
+					else if(this.selectedOption <= NAME_DIGIT_THREE_ID)
 						this.gameItems.get(selectedOption).get(i).setScale(0);
 				}
 			}
@@ -272,5 +299,6 @@ public class Options implements IScene
 	public static class Values
 	{
 		public static char[] name = new char[3];
+		public static boolean muteSound = false, muteMusic = false;
 	}
 }

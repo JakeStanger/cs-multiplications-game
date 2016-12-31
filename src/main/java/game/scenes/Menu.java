@@ -192,7 +192,19 @@ public class Menu implements IScene
 	@Override
 	public void update(float interval, MouseInput mouseInput)
 	{
+		//Toggle music
+		SoundSource music = this.soundManager.getSoundSource(Sound.MENU_MUSIC.toString());
+		if(music.isPlaying() && Options.Values.muteMusic) music.stop();
+		else if(!music.isPlaying() && !Options.Values.muteMusic) music.play();
 		
+		//Toggle sound effects
+		SoundSource boop = this.soundManager.getSoundSource(Sound.BOOP.toString());
+		SoundSource boopHigh = this.soundManager.getSoundSource(Sound.BOOP_HIGH.toString());
+		if(Options.Values.muteSound)
+		{
+			if(boop.isPlaying()) boop.stop();
+			if(boopHigh.isPlaying()) boopHigh.stop();
+		}
 	}
 		
 	@Override

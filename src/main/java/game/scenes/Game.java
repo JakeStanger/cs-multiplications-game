@@ -241,6 +241,23 @@ public class Game implements IScene
 			
 			food.update();
 		}
+		
+		//--Sounds--
+		//Toggle music
+		SoundSource music = soundManager.getSoundSource(Sound.GAME_MUSIC.toString());
+		if(music.isPlaying() && Options.Values.muteMusic) music.stop();
+		else if(!music.isPlaying() && !Options.Values.muteMusic) music.play();
+		
+		//Toggle sound effects
+		SoundSource boop = soundManager.getSoundSource(Sound.BOOP.toString());
+		SoundSource boopHigh = soundManager.getSoundSource(Sound.BOOP_HIGH.toString());
+		SoundSource gameOver = soundManager.getSoundSource(Sound.GAME_MUSIC.toString());
+		if(Options.Values.muteSound)
+		{
+			if(boop.isPlaying()) boop.stop();
+			if(boopHigh.isPlaying()) boopHigh.stop();
+			if(gameOver.isPlaying()) gameOver.stop();
+		}
 	}
 	
 	public static void endGame()
