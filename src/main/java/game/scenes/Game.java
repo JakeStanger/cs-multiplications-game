@@ -13,15 +13,13 @@ import engine.items.GameItem;
 import engine.sound.SoundBuffer;
 import engine.sound.SoundManager;
 import engine.sound.SoundSource;
+import game.enums.Direction;
 import game.enums.Sound;
+import game.items.*;
 import game.utils.Database;
 import game.GameLogic;
 import game.Hud;
 import game.Main;
-import game.items.Food;
-import game.items.SnakeHead;
-import game.items.SnakeTail;
-import game.items.Wall;
 import game.wrappers.LeaderboardEntry;
 import org.joml.Vector2f;
 import org.joml.Vector3f;
@@ -230,9 +228,24 @@ public class Game implements IScene
 			Vector2f rotVec = mouseInput.getDisplVec();
 			this.camera.moveRotation(rotVec.x * Game.MOUSE_SENSITIVITY, rotVec.y * Game.MOUSE_SENSITIVITY, 0);
 		}
+		//Stop camera from going upside-down
+		if(this.camera.getRotation().x > 90) this.camera.getRotation().x = 90;
+		if(this.camera.getRotation().x < -90) this.camera.getRotation().x = -90;
 		
-		//Update camera position
-		this.camera.movePosition(this.cameraDelta.x * CAMERA_POS_STEP, this.cameraDelta.y * CAMERA_POS_STEP, this.cameraDelta.z * CAMERA_POS_STEP);
+		//--Update camera position--
+		//Move according to input
+		this.camera.movePosition(
+				this.cameraDelta.x * CAMERA_POS_STEP,
+				this.cameraDelta.y * CAMERA_POS_STEP,
+				this.cameraDelta.z * CAMERA_POS_STEP);
+		
+		//Move with snake
+		Direction dir = snakeHead.getDirection();
+		float step = SnakeHead.SNAKE_STEP;
+		this.camera.movePosition(
+				dir == Direction.LEFT ? -step : dir == Direction.RIGHT ? step : 0,
+				dir == Direction.UP ? step : dir == Direction.DOWN ? -step : 0,
+				dir == Direction.FORWARDS ? -step : dir == Direction.BACKWARDS ? step : 0);
 		
 		if (isRunning())
 		{
@@ -245,14 +258,18 @@ public class Game implements IScene
 		//--Sounds--
 		//Toggle music
 		SoundSource music = soundManager.getSoundSource(Sound.GAME_MUSIC.toString());
-		if(music.isPlaying() && Options.Values.muteMusic) music.stop();
-		else if(!music.isPlaying() && !Options.Values.muteMusic) music.play();
+		if(music != null)
+		{
+			if (music.isPlaying() && Options.Values.muteMusic) music.stop();
+			else if (!music.isPlaying() && !Options.Values.muteMusic) music.play();
+		}
 		
 		//Toggle sound effects
 		SoundSource boop = soundManager.getSoundSource(Sound.BOOP.toString());
 		SoundSource boopHigh = soundManager.getSoundSource(Sound.BOOP_HIGH.toString());
 		SoundSource gameOver = soundManager.getSoundSource(Sound.GAME_MUSIC.toString());
-		if(Options.Values.muteSound)
+		if(Options.Values.muteSound
+				&& boop != null && boopHigh != null && gameOver != null)
 		{
 			if(boop.isPlaying()) boop.stop();
 			if(boopHigh.isPlaying()) boopHigh.stop();

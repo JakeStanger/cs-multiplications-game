@@ -29,7 +29,8 @@ import static org.lwjgl.glfw.GLFW.*;
  */
 public class SnakeHead extends SnakePiece
 {
-	static final float REFLECTANCE = 0.7f, SNAKE_STEP = 0.05f;
+	static final float REFLECTANCE = 0.7f;
+	public static final float SNAKE_STEP = 0.05f;
 	
 	private List<SnakeTail> tailList;
 	
