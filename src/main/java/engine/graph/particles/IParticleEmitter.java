@@ -6,7 +6,7 @@ import java.util.List;
 
 /**
  * @author Jake stanger
- *         TODO Write JavaDoc
+ * Interface for emitting particles
  */
 public interface IParticleEmitter
 {

@@ -267,7 +267,7 @@ public class Game implements IScene
 		//Toggle sound effects
 		SoundSource boop = soundManager.getSoundSource(Sound.BOOP.toString());
 		SoundSource boopHigh = soundManager.getSoundSource(Sound.BOOP_HIGH.toString());
-		SoundSource gameOver = soundManager.getSoundSource(Sound.GAME_MUSIC.toString());
+		SoundSource gameOver = soundManager.getSoundSource(Sound.GAME_OVER.toString());
 		if(Options.Values.muteSound
 				&& boop != null && boopHigh != null && gameOver != null)
 		{

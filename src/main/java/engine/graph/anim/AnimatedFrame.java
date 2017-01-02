@@ -6,11 +6,12 @@ import java.util.Arrays;
 
 /**
  * @author Jake stanger
- *         TODO Write JavaDoc
+ * A frame for animated MD5 models.
+ * Contains joint information.
  */
 public class AnimatedFrame
 {
-	public static final int MAX_JOINTS = 150;
+	private static final int MAX_JOINTS = 150;
 	private static final Matrix4f IDENTITY_MATRIX = new Matrix4f();
 	private final Matrix4f[] localJointMatrices, jointMatrices;
 	

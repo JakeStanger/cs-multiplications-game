@@ -7,7 +7,9 @@ import org.joml.Vector3f;
 
 /**
  * @author Jake stanger
- *         TODO Write JavaDoc
+ * A particle for graphical effects.
+ * A 2D front facing sprite moving
+ * from its emitter until it 'decays'.
  */
 public class Particle extends GameItem
 {

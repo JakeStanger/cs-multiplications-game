@@ -8,7 +8,8 @@ import java.util.List;
 
 /**
  * @author Jake stanger
- *         TODO Write JavaDoc
+ * A GameItem consisting of multiple
+ * frames which can be switched between.
  */
 public class AnimGameItem extends GameItem
 {

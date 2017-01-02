@@ -81,6 +81,8 @@ public class SnakeHead extends SnakePiece
 			this.turnPoints.add(new TurnPoint(direction, Utils.getNextRoundedVector(this.getPosition(), this.direction, GRID_SIZE)));
 			soundManager.playSoundSource(Sound.BOOP.toString());
 		}
+		
+		System.out.println(turnPoints);
 	}
 	
 	public void update(SoundManager soundManager)

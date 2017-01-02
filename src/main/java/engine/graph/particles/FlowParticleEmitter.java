@@ -9,7 +9,7 @@ import java.util.List;
 
 /**
  * @author Jake stanger
- *         TODO Write JavaDoc
+ * Example implementation of IParticleEmitter
  */
 public class FlowParticleEmitter implements IParticleEmitter
 {

@@ -5,7 +5,7 @@ import org.joml.Vector3f;
 
 /**
  * @author Jake stanger
- *         TODO Write JavaDoc
+ * A vertex for animated MD5 models.
  */
 public class AnimVertex
 {
