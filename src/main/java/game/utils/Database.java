@@ -1,5 +1,6 @@
 package game.utils;
 
+import game.scenes.Options;
 import game.wrappers.LeaderboardEntry;
 
 import java.sql.*;
@@ -12,10 +13,6 @@ import java.util.List;
  */
 public class Database
 {
-	private static final String url = "jdbc:mysql://localhost:3306/3d_snake";
-	private static final String username = "java";
-	private static final String password = "JS2tgLzXIbFmZxMv";
-	
 	public static List<LeaderboardEntry> readAllEntries()
 	{
 		try
@@ -62,6 +59,8 @@ public class Database
 	
 	private static Connection connectToDatabase() throws SQLException
 	{
-		return DriverManager.getConnection(url, username, password);
+		return DriverManager.getConnection(Options.Values.SQL.url,
+				Options.Values.SQL.username,
+				Options.Values.SQL.password);
 	}
 }

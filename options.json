@@ -1,5 +1,10 @@
 {
   "name": "wow",
   "muteSound": true,
-  "muteMusic": true
+  "muteMusic": true,
+  "sql": {
+    "url": "jdbc:mysql://localhost:3306/3d_snake",
+    "username": "jdbc:mysql://localhost:3306/3d_snake",
+    "password": "jdbc:mysql://localhost:3306/3d_snake"
+  }
 }

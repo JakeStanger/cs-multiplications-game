@@ -300,5 +300,12 @@ public class Options implements IScene
 	{
 		public static char[] name = new char[3];
 		public static boolean muteSound = false, muteMusic = false;
+		
+		public static class SQL
+		{
+			public static String url = "jdbc:mysql://localhost:3306/3d_snake";
+			public static String username = "java";
+			public static String password = "JS2tgLzXIbFmZxMv";
+		}
 	}
 }
