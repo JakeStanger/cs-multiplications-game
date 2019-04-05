@@ -3,4 +3,6 @@
 
 Built with LWJGL3.
 
-Game engine was made according to this tutorial book: https://ahbejarano.gitbook.io/lwjglgamedev/ 
+Game engine was made according to [this tutorial book](https://ahbejarano.gitbook.io/lwjglgamedev/).
+
+![Screenshot](https://f.jstanger.dev/github/snake.png)
